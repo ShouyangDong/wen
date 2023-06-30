@@ -92,9 +92,9 @@ def query_question(USER_QUESTION):
     top_k = min(5, len(related_corpus_section))
     query_embedding = embedder.encode(final_response, convert_to_tensor=True)
 
-    from split_md import create_embeddings_for_text
+    from text_split import create_embeddings_for_text
 
-    from transformers_mlu import AutoTokenizer
+    from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(model, use_fast=False)
 
     related_corpus_sentences = []
