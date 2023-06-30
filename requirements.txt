@@ -1,0 +1,6 @@
+numpy
+tqdm
+openai
+elasticsearch
+sentence_transformers
+import torch
