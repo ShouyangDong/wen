@@ -7,10 +7,8 @@ from tqdm import tqdm
 import json
 import openai
 import pickle
-from datetime import datetime
 from sentence_transformers import SentenceTransformer, util
 import torch
-from scipy.spatial import distance
 from datetime import datetime
 from elasticsearch import Elasticsearch
 import os

@@ -1,5 +1,5 @@
-# wen
-Wen is domain specific gpt. Compared with Other solution, the answer given by wen will be more accurate. 
+# Wen
+Wen is a domain specific gpt. Compared with Other solution, the answer given by Wen will be more accurate. 
 
 
 # Introduction
