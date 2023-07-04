@@ -15,4 +15,4 @@
 * [模型精调](./data.md)
 * [模型评测](./evaluate.md)
 * [数据库的构建](./database.md)
-* 模型web gui的展示
+* [模型web gui的展示](./gui.md)
