@@ -6,6 +6,7 @@ import openai
 openai.api_key = "YOUR_API_KEY"
 openai.api_base = "http://10.100.209.14:8001/v1"
 
+
 def get_eval_prompt(query, result, answer):
     template = f"""您是一名教师，正在为一张测验打分。
     您会得到一个问题、学生的回答和正确答案，并被要求将学生的回答评分为“正确”或“错误”。
@@ -24,11 +25,11 @@ def get_eval_prompt(query, result, answer):
     评分："""
     return template
 
+
 def check_qa_result(query, result, answer):
     qa_prompt = get_eval_prompt(query, result, answer)
     completion = openai.ChatCompletion.create(
-        model=model,
-        messages=[{"role": "user", "content": qa_prompt}]
+        model=model, messages=[{"role": "user", "content": qa_prompt}]
     )
     response = completion.choices[0].message.content.strip()
     return response
@@ -47,6 +48,6 @@ if __name__ == "__main__":
             data["评分"] = "False"
         quize_result.append(data)
 
-    print("[INFO]*********************correct rate: ", correct_num/len(database))
-    with open('qa_pair_result.json', 'w', encoding='utf8') as json_file:
+    print("[INFO]*********************correct rate: ", correct_num / len(database))
+    with open("qa_pair_result.json", "w", encoding="utf8") as json_file:
         json.dump(quize_result, json_file, ensure_ascii=False, indent=2)
