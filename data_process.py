@@ -12,8 +12,9 @@ openai.api_key = "Enter your OpenAI API Key Here"
 
 CHAT_MODEL = "gpt-3.5-turbo"
 
+
 def gen_prompt(text):
-    prompt = f'''
+    prompt = f"""
         请根据文本生成尽可能多的问答，每个问答都要独立成篇，并且确保每个问题的答案都能够在文本中找到。此外，请不要在问答中使用指代原文的代词。
         例如：
         文本：
@@ -34,12 +35,14 @@ def gen_prompt(text):
         ...
 
         请根据文本{text}, 开始生成QA问答。
-    '''
+    """
     return prompt
 
 
 # Initialize the ArgumentParser object
-parser = argparse.ArgumentParser(description='Generate Output using ChatGPT')
+parser = argparse.ArgumentParser(description="Generate Output using ChatGPT")
+
+
 def openai_gpt(prompt: str, verbose: bool = False, max_attempts: int = 3) -> str:
     """
     This function sends a prompt to the OpenAI GPT API and returns the response.
@@ -66,7 +69,7 @@ def openai_gpt(prompt: str, verbose: bool = False, max_attempts: int = 3) -> str
                 max_tokens=3072,
                 temperature=0.5,
                 top_p=1.0,
-                stop=["\n20", "20.", "20."]
+                stop=["\n20", "20.", "20."],
             )
             choices = [choice["message"]["content"] for choice in response["choices"]]
 
@@ -85,7 +88,8 @@ def openai_gpt(prompt: str, verbose: bool = False, max_attempts: int = 3) -> str
                 print(f"Error on attempt {attempt}: {e}. All attempts failed.")
                 # we will return None if all attempts failed because raising an exception will stop the program and we will lose all the data we have collected so far
                 return None
-            
+
+
 def chat_completions(dataset, num_samples, output_file, verbose):
     """ Generate completions using the Chat Model
 
@@ -98,33 +102,48 @@ def chat_completions(dataset, num_samples, output_file, verbose):
     # generate the prompt for the row
     rows = json.load(dataset)
     num_samples = min(num_samples, len(rows))
-    
-    with open(output_file,"w") as outfile:
+
+    with open(output_file, "w") as outfile:
         outfile.write("[\n")
         for i in range(num_samples):
-            print (f"Working on {i+1} of {num_samples}")
-            prompt = "instruction: '" + rows[i]['instruction'] + "'\ninput: '" + rows[i]['input'] + "'"
-            rows[i]['output'] = openai_gpt(prompt, verbose)
+            print(f"Working on {i+1} of {num_samples}")
+            prompt = (
+                "instruction: '"
+                + rows[i]["instruction"]
+                + "'\ninput: '"
+                + rows[i]["input"]
+                + "'"
+            )
+            rows[i]["output"] = openai_gpt(prompt, verbose)
             if rows == None:
                 break
             data = json.dumps(rows[i], indent=4)
             outfile.write(f"{data}")
-            if i < num_samples-1:
+            if i < num_samples - 1:
                 outfile.write(",\n")
         outfile.write("\n]")
-        
+
+
 def main():
     global parser
-    
+
     # Define the arguments
-    parser.add_argument('--dataset', type=str, default="alpaca_data_cleaned.json", help='Alpaca Dataset name')
-    parser.add_argument('--num_samples', type=int, default=3, help='Number of samples')
-    parser.add_argument('--output_file', type=str, default="chat_dataset.json", help="output filename")
-    parser.add_argument('--verbose', type=bool, default=True, help="Verbose output")
-    
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        default="alpaca_data_cleaned.json",
+        help="Alpaca Dataset name",
+    )
+    parser.add_argument("--num_samples", type=int, default=3, help="Number of samples")
+    parser.add_argument(
+        "--output_file", type=str, default="chat_dataset.json", help="output filename"
+    )
+    parser.add_argument("--verbose", type=bool, default=True, help="Verbose output")
+
     # Parse the arguments
     args = parser.parse_args()
     chat_completions(args.dataset, args.num_samples, args.output_file, args.verbose)
+
 
 if __name__ == "__main__":
     main()
