@@ -48,4 +48,6 @@ strides	An int or list of ints that has length 1, N or N+2. The stride of the sl
 Returns
 A Tensor of format specified by data_format. The average pooled output tensor.
 ```
-通过``ingest.py``中的函数对每个的小章节或者API介绍进行编码，并保存。
+通过``ingest.py``中的函数对每个的小章节或者API介绍进行编码，并保存。整个领域知识入库​的过程如下图所示：
+
+![database](./../images/database.png)
