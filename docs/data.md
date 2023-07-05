@@ -42,7 +42,8 @@
     
     {
         问题: "介绍Tensorflow的avg_pool的参数。", 
-        回答： "Tensorflow的avg_pool函数的参数如下：\n
+        回答： "Tensorflow的avg_pool函数的参数如下：
+        
             - input: 等级为 N+2 的张量，如果 data_format 不以“NC”开头（默认），则形状为 [batch_size] + input_spatial_shape + [num_channels]，或者如果 data_format 以“NC”开头，则为 [batch_size, num_channels] + input_spatial_shape。 池化仅发生在空间维度上。
 
             - ksize: 长度为 1、N 或 N+2 的整数或整数列表。 输入张量每个维度的窗口大小。
