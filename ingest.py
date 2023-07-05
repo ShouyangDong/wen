@@ -1,16 +1,10 @@
 """Save the dataset into embedding datavector."""
-from sentence_transformers import SentenceTransformer, util
 import os
-import csv
 import pickle
-import time
-import json
+from sentence_transformers import SentenceTransformer
 
 model_name = "all-MiniLM-L6-v2"
 model = SentenceTransformer(model_name)
-
-max_corpus_size = 100000
-
 
 def save_database(embedding_cache_path, file_name):
     # Check if embedding cache path exists
@@ -20,13 +14,13 @@ def save_database(embedding_cache_path, file_name):
 
         print("Encode the corpus. This might take a while")
         corpus_embeddings = model.encode(
-            corpus_sentences, show_progress_bar=True, convert_to_tensor=True
+            content, show_progress_bar=True, convert_to_tensor=True
         )
 
         print("Store file on disc")
         with open(embedding_cache_path, "wb") as fOut:
             pickle.dump(
-                {"sentences": corpus_sentences, "embeddings": corpus_embeddings}, fOut
+                {"sentences": content, "embeddings": corpus_embeddings}, fOut
             )
     else:
         raise RuntimeError("File exist")
