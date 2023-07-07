@@ -15,4 +15,5 @@
 * [模型精调](./llm.md)
 * [模型评测](./evaluate.md)
 * [数据库的构建](./database.md)
+* [搜索系统](./search.md)
 * [模型web gui的展示](./gui.md)
