@@ -44,16 +44,11 @@
         问题: "介绍Tensorflow的avg_pool的参数。", 
         回答： "Tensorflow的avg_pool函数的参数如下：
         
-            - input: 等级为 N+2 的张量，如果 data_format 不以“NC”开头（默认），则形状为 [batch_size] + input_spatial_shape + [num_channels]，或者如果 data_format 以“NC”开头，则为 [batch_size, num_channels] + input_spatial_shape。 池化仅发生在空间维度上。
-
-            - ksize: 长度为 1、N 或 N+2 的整数或整数列表。 输入张量每个维度的窗口大小。
-
-            - strides：长度为 1、N 或 N+2 的整数或整数列表。 输入张量每个维度的滑动窗口的步幅。
-
-            - padding:一个字符串，“VALID”或“SAME”。 填充算法。 浏览此处获取更多信息。
-
-            - data_format: 一个字符串。 指定通道尺寸。 对于 N=1，它可以是“NWC”（默认）或“NCW”，对于 N=2，它可以是“NHWC”（默认）或“NCHW”，对于 N=3，它可以是“NDHWC”（默认）或 “NCDHW”。
-
-            - name: 操作的可选名称."
+            - input: Tensor of rank N+2, of shape [batch_size] + input_spatial_shape + [num_channels] if data_format does not start with "NC" (default), or         [batch_size, num_channels] + input_spatial_shape if data_format starts with "NC". Pooling happens over the spatial dimensions only.
+            - ksize：An int or list of ints that has length 1, N or N+2. The size of the window for each dimension of the input tensor.
+            -strides: An int or list of ints that has length 1, N or N+2. The stride of the sliding window for each dimension of the input tensor.
+            -padding: A string, either 'VALID' or 'SAME'. The padding algorithm. See here for more information.
+            -data_format: A string. Specifies the channel dimension. For N=1 it can be either "NWC" (default) or "NCW", for N=2 it can be either "NHWC" (default) or "NCHW" and for N=3 either "NDHWC" (default) or "NCDHW".
+            -name: Optional name for the operation."
     }, 
     ```
