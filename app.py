@@ -71,7 +71,7 @@ def query_question(USER_QUESTION):
     query_completion = openai.ChatCompletion.create(
         model=model, messages=[{"role": "user", "content": query_prompt}]
     )
-    query_response = query_completion.choices[0].message.content
+    query_response = query_completion.choices[0].message.content.strip()
     query_response = query_response.replace("[", "")
     query_response = query_response.replace("]", "")
     query_response = query_response.split(",")
@@ -83,7 +83,7 @@ def query_question(USER_QUESTION):
     completion = openai.ChatCompletion.create(
         model=model, messages=[{"role": "user", "content": USER_QUESTION}]
     )
-    final_response = completion.choices[0].message.content
+    final_response = completion.choices[0].message.content.strip()
     # print(related_corpus_section)
     # # Find the closest 5 sentences of the corpus for each query sentence based on cosine similarity
     top_k = min(5, len(related_corpus_section))
@@ -121,7 +121,7 @@ def query_question(USER_QUESTION):
             completion = openai.ChatCompletion.create(
                 model=model, messages=[{"role": "user", "content": prompt}]
             )
-            final_response = completion.choices[0].message.content
+            final_response = completion.choices[0].message.content.strip()
         except Exception as e:
             return None
     return final_response
