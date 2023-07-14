@@ -5,6 +5,9 @@
 * 因为PEFT库变动频繁，该代码仅适用于特定的peft版本，请从源码安装commit id为13e53fc的Peft。如果使用其他版本的PEFT， 不能保证模型可以正常训练。
 * Pre-training Stage 1中模型训练收敛速度较慢，我们不推荐使用，目录中也没有提供相应的脚本。
 * 运行前确保拉仓库的最新代码： git pull
+
+预训练和精调可以参考对应的开源大模型的训练步骤， 我们这以[中文alpaca](https://github.com/ymcui/Chinese-LLaMA-Alpaca)为例。
+
 # 训练步骤
 
 以下介绍的是Pre-training Stage2 开始训练的步骤，训练脚本：[scripts/training/run_clm_pt_with_peft.py](https://github.com/ymcui/Chinese-LLaMA-Alpaca/blob/main/scripts/training/run_clm_pt_with_peft.py)
