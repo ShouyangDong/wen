@@ -1,17 +1,21 @@
 # Wen
-Wen is a domain specific gpt. Compared with Other solution, the answer given by Wen will be more accurate. 
 
+Wen 是特定于域的 gpt。与其他解决方案相比，文给出的答案会更加准确。
 
-# Introduction
-Although fine-tuning can feel like the more natural option—training on data is how GPT learned all of its other knowledge, after all—we generally do not recommend it as a way to teach the model knowledge. Fine-tuning is better suited to teaching specialized tasks or styles, and is less reliable for factual recall.
+# 介绍
 
-As an analogy, model weights are like long-term memory. When you fine-tune a model, it's like studying for an exam a week away. When the exam arrives, the model may forget details, or misremember facts it never read.
+尽管微调感觉像是更自然的选择（毕竟，数据训练是 GPT 学习所有其他知识的方式），但我们通常不推荐将其作为教授模型知识的方式。微调更适合教授专门的任务或风格，但对于事实回忆来说不太可靠。
 
-In contrast, message inputs are like short-term memory. When you insert knowledge into a message, it's like taking an exam with open notes. With notes in hand, the model is more likely to arrive at correct answers.
+打个比方，模型权重就像长期记忆。当你对模型进行微调时，就像为一周后的考试做准备一样。当考试到来时，模型可能会忘记细节，或者记错它从未读过的事实。
+
+相比之下，消息输入就像短期记忆。当您在消息中插入知识时，就像用未完成的笔记参加考试一样。有了笔记，模型更有可能得出正确答案。
 
 
 # Search System
+
+下图为整个搜索系统的流程图：
 ![search](./images/search.png)
 
 # Overall Structure 
+整个系统的流程图是在上图的基础上，结合大模型的语言处理能力，增强和用户的交互。
 ![overall](./images/structure.png)
