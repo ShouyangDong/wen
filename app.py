@@ -2,17 +2,22 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 app.static_folder = "static"
-import random
+
 from tqdm import tqdm
 import json
 import openai
-import pickle
-import torch
 from datetime import datetime
+import torch
+
 from elasticsearch import Elasticsearch
 import os
-
-from transformers import AutoTokenizer
+import urllib3
+import numpy as np
+from numpy.linalg import norm
+import requests
+from scipy.spatial.distance import cosine
+from transformers_mlu import AutoTokenizer
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # only do once
 # 连接到 Elasticsearch 服务器
@@ -22,15 +27,14 @@ es = Elasticsearch(
     http_auth=("elastic", "*qdSlBZ7AmkaHhyf0VLN"),
 )
 
-embedder = SentenceTransformer("all-MiniLM-L6-v2")
 # 设置OpenAI API
 openai.api_key = "YOUR_API_KEY"
-openai.api_base = "http://10.100.209.14:8001/v1"
+openai.api_base = "http://10.100.207.69:8001/v1"
 
 
 
 def get_embedding_from_api(word, model="chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20"):
-    url = "http://10.100.209.14:8001/v1/create_embeddings"
+    url = "http://10.100.207.69:8001/v1/create_embeddings"
     headers = {"Content-Type": "application/json"}
     data = json.dumps({"model": model, "input": word})
 
@@ -47,7 +51,7 @@ def cosine_similarity(vec1, vec2):
     return 1 - cosine(vec1, vec2)
 
 def query_question(USER_QUESTION):
-    model = "chinese-alpaca-plus-13B-docs-human-filtered-api-epoch-25"
+    model = "chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20"
     tokenizer = AutoTokenizer.from_pretrained(model, use_fast=False)
     
     # search function
@@ -56,8 +60,9 @@ def query_question(USER_QUESTION):
         query_embedding = get_embedding_from_api(query)
         # Calculate cosine similarity
         cosine_similarities = []
+        
         for corpus in corpus_list:
-            corpus_embedding = get_embedding_from_api(corpus)
+            corpus_embedding = get_embedding_from_api(corpus, model)
             cosine_similarities.append(cosine_similarity(query_embedding, corpus_embedding))
         # Sort articles by cosine similarity
         score = np.sort(cosine_similarities)
@@ -74,7 +79,6 @@ def query_question(USER_QUESTION):
 
         # 搜索包含关键字 "elasticsearch" 的文档
         res = es.search(index="doc", body={"query": {"match": {"content": query}}})
-        print("Got %d Hits:" % res["hits"]["total"]["value"])
         formatted_top_results = set()
         for hit in res["hits"]["hits"]:
             formatted_top_results.add(hit["_source"]["content"])
@@ -111,8 +115,7 @@ def query_question(USER_QUESTION):
         model=model, messages=[{"role": "user", "content": USER_QUESTION}]
     )
     final_response = completion.choices[0].message.content.strip()
-    # print(related_corpus_section)
-    # # Find the closest 5 sentences of the corpus for each query sentence based on cosine similarity
+    # Find the closest 5 sentences of the corpus for each query sentence based on cosine similarity
     top_k = min(5, len(related_corpus_section))
 
     from text_split import create_embeddings_for_text
@@ -138,7 +141,7 @@ def query_question(USER_QUESTION):
             {USER_QUESTION}
             """
             completion = openai.ChatCompletion.create(
-                model=model, messages=[{"role": "user", "content": prompt}]
+                model=model, messages=[{"role": "user", "content": prompt}],
             )
             final_response = completion.choices[0].message.content.strip()
         except Exception as e:
