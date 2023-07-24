@@ -7,11 +7,12 @@ from tqdm import tqdm
 import json
 import openai
 import pickle
-from sentence_transformers import SentenceTransformer, util
 import torch
 from datetime import datetime
 from elasticsearch import Elasticsearch
 import os
+
+from transformers import AutoTokenizer
 
 # only do once
 # 连接到 Elasticsearch 服务器
@@ -27,15 +28,41 @@ openai.api_key = "YOUR_API_KEY"
 openai.api_base = "http://10.100.209.14:8001/v1"
 
 
+
+def get_embedding_from_api(word, model="chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20"):
+    url = "http://10.100.209.14:8001/v1/create_embeddings"
+    headers = {"Content-Type": "application/json"}
+    data = json.dumps({"model": model, "input": word})
+
+    response = requests.post(url, headers=headers, data=data)
+    if response.status_code == 200:
+        embedding = np.array(response.json()["data"][0]["embedding"])
+        return embedding
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+        return None
+
+
+def cosine_similarity(vec1, vec2):
+    return 1 - cosine(vec1, vec2)
+
 def query_question(USER_QUESTION):
     model = "chinese-alpaca-plus-13B-docs-human-filtered-api-epoch-25"
+    tokenizer = AutoTokenizer.from_pretrained(model, use_fast=False)
+    
     # search function
-    def strings_ranked_by_relatedness(query, corpus_embeddings, top_n=100):
+    def strings_ranked_by_relatedness(query, corpus_list, top_n=100):
         """Returns a list of strings and relatednesses, sorted from most related to least."""
-        query_embedding = embedder.encode(query, convert_to_tensor=True)
-        cos_scores = util.cos_sim(query_embedding, corpus_embeddings)[0]
-        top_results = torch.topk(cos_scores, k=top_n)
-        return top_results[1][:top_n], top_results[0][:top_n]
+        query_embedding = get_embedding_from_api(query)
+        # Calculate cosine similarity
+        cosine_similarities = []
+        for corpus in corpus_list:
+            corpus_embedding = get_embedding_from_api(corpus)
+            cosine_similarities.append(cosine_similarity(query_embedding, corpus_embedding))
+        # Sort articles by cosine similarity
+        score = np.sort(cosine_similarities)
+        index = np.argsort(cosine_similarities)
+        return score[:top_n], index[:top_n]
 
     def strings_ranked_by_keyword(query, text_embeddings=None, insert=False):
         if insert:
@@ -87,25 +114,17 @@ def query_question(USER_QUESTION):
     # print(related_corpus_section)
     # # Find the closest 5 sentences of the corpus for each query sentence based on cosine similarity
     top_k = min(5, len(related_corpus_section))
-    query_embedding = embedder.encode(final_response, convert_to_tensor=True)
 
     from text_split import create_embeddings_for_text
-
-    from transformers import AutoTokenizer
-
-    tokenizer = AutoTokenizer.from_pretrained(model, use_fast=False)
 
     related_corpus_sentences = []
     for sentence in related_corpus_section:
         related_corpus_sentences.extend(create_embeddings_for_text(sentence, tokenizer))
     if len(related_corpus_sentences) == 0:
         return final_response
-    related_corpus_embeddings = embedder.encode(
-        related_corpus_sentences, convert_to_tensor=True
-    )
+
     # We use cosine-similarity and torch.topk to find the highest 5 scores
-    cos_scores = util.cos_sim(query_embedding, related_corpus_embeddings)[0]
-    top_results = torch.topk(cos_scores, k=top_k)
+    top_results = strings_ranked_by_relatedness(final_response, related_corpus_sentences, top_n=top_k)
 
     # If the highest score < 0.6, just print the hypothetical ideal answer
     if top_results[0][0] >= 0.6:
