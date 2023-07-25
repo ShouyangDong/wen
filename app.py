@@ -16,7 +16,6 @@ import numpy as np
 from numpy.linalg import norm
 import requests
 from scipy.spatial.distance import cosine
-from transformers_mlu import AutoTokenizer
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # only do once
@@ -52,7 +51,6 @@ def cosine_similarity(vec1, vec2):
 
 def query_question(USER_QUESTION):
     model = "chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20"
-    tokenizer = AutoTokenizer.from_pretrained(model, use_fast=False)
     
     # search function
     def strings_ranked_by_relatedness(query, corpus_list, top_n=100):
@@ -118,11 +116,12 @@ def query_question(USER_QUESTION):
     # Find the closest 5 sentences of the corpus for each query sentence based on cosine similarity
     top_k = min(5, len(related_corpus_section))
 
-    from text_split import create_embeddings_for_text
+    from text_split import create_chunk_for_text
 
     related_corpus_sentences = []
     for sentence in related_corpus_section:
-        related_corpus_sentences.extend(create_embeddings_for_text(sentence, tokenizer))
+        # Here the max_seq_length of llama model is defined as 2048
+        related_corpus_sentences.extend(create_chunk_for_text(sentence))
     if len(related_corpus_sentences) == 0:
         return final_response
 
