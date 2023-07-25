@@ -14,7 +14,13 @@ def chunks(text, size, tokenizer):
         while j > i + int(0.5 * size):
             # Decode the tokens and check for full stop or newline
             chunk = tokenizer.decode(tokens[i:j])
-            if chunk.endswith(".") or chunk.endswith("\n"):
+            if (
+                chunk.endswith(".")
+                or chunk.endswith("\n")
+                or chunk.endswith("。")
+                or chunk.endswith("！")
+                or chunk.endswith("？")
+            ):
                 break
             j -= 1
         # If no end of sentence found, use n tokens as the chunk size
@@ -44,3 +50,35 @@ def get_col_average_from_list_of_lists(list_of_lists):
 def get_embeddings(text_array, tokenizer):
     """Get the embedding according to the responding tokenizer."""
     return tokenizer.encode(text_array)
+
+
+# Split a text into smaller chunks of size n, preferably ending at the end of a sentence
+def text_chunks(text, n):
+    """Yield successive n-sized chunks from text."""
+    i = 0
+    while i < len(text):
+        # Find the nearest end of sentence within a range of 0.5 * n and 1.5 * n tokens
+        j = min(i + int(1.5 * n), len(text))
+        while j > i + int(0.5 * n):
+            # Decode the tokens and check for full stop or newline
+            chunk = text[i:j]
+            if (
+                chunk.endswith(".")
+                or chunk.endswith("\n")
+                or chunk.endswith("。")
+                or chunk.endswith("！")
+                or chunk.endswith("？")
+            ):
+                break
+            j -= 1
+        # If no end of sentence found, use n tokens as the chunk size
+        if j == i + int(0.5 * n):
+            j = min(i + n, len(text))
+
+        yield text[i:j]
+        i = j
+
+
+def create_chunk_for_text(text, chunk_size=2000):
+    """Return a list text_chunk."""
+    return list(text_chunks(text, TEXT_EMBEDDING_CHUNK_SIZE))
