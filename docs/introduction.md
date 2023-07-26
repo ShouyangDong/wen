@@ -17,3 +17,4 @@
 * [数据库的构建](./database.md)
 * [搜索系统](./search.md)
 * [模型web gui的展示](./webui.md)
+* [常见问题的解决办法](./diagnostics.md)
