@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>qa_system.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="%E5%9F%BA%E4%BA%8E%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F">基于大语言模型构建知识问答系统</h1>
+<pre><code>                   目录
+
+            1. 知识问答系统架构
+            2. 环境安装
+            3. 数据库建立
+            4. 文本分割
+            5. 模型的训练
+                数据集的制作
+                模型的训练
+            6. 系统的评测
+            7. webui的展示
+            8. 总结
+            9. 附录：常见的问题及解决方案
+</code></pre>
+<h1 id="1-%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84">1. 知识问答系统架构</h1>
+<h2 id="%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84">整体架构</h2>
+<p>打造 特定领域知识(Domain-specific Knowledge) 问答 系统，具体需求有：</p>
+<ul>
+<li>通过自然语言问答的形式，和用户交互，同时支持中文和英文。</li>
+<li>理解用户不同形式的问题，找到与之匹配的答案。可以对答案进行二次处理，比如将关联的多个知识点进行去重、汇总等。</li>
+<li>支持上下文。有些问题可能比较复杂，或者原始知识不能覆盖，需要从历史会话中提取信息。</li>
+<li>准确。不要出现似是而非或无意义的回答。</li>
+</ul>
+<p>我们提出一种由大模型+搜索的方式，充分利用大模型的思维链的推理能力，将问题的背景文档进行归纳总结，高效、准确的找出其对应的答案，该系统的名字为<code>wen</code>。其总体的架构图为：</p>
+<p><img src="./images/search.png" alt="search"></p>
+<h2 id="%E6%90%9C%E7%B4%A2%E7%BB%86%E8%8A%82">搜索细节</h2>
+<p>由于寒武纪的开发者文档比较复杂，整个搜索过程我们采用问题的关键字检索和重新排序（retrieve &amp; re-rank）的流程。下图为<code>Wen</code>的搜索流程：</p>
+<p><img src="./images/InformationRetrieval.png" alt="搜索流程"></p>
+<p>我们首先利用大模型得到问题的关键字，然后采用<code>ElasticSearch</code>搜索对应的关键字得到相关的文档。
+然后通过将相关文档和大模型的假设答案进行对比（采用<code>cosine相似度</code>进行排序）。然后根据相似度分数得到最相关的文档（详细细节可见<code>app.py</code>中的<code>query_question</code>函数）。</p>
+<p>ElasticSearch的一个优点是可以轻松添加新文档到索引中，我们还可以将其他数据与向量一起存储。缺点是性能较慢，因为它会将查询嵌入向量与所有存储的嵌入向量进行比较。这具有线性运行时间，在大型（&gt;100k）语料库中可能过慢。</p>
+<h1 id="2-%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85">2. 环境安装</h1>
+<p>整个知识问题系统所需要的代码文件均在<code>wen</code>（可直接源码下载）的文件夹下。整个代码的目录结构如下：</p>
+<p><img src="./images/wen.png" alt="目录结构"></p>
+<p>此外以下的Python包为整个知识问答系统所必须的的安装包</p>
+<pre class="hljs"><code><div>numpy
+tqdm
+openai
+elasticsearch
+flask
+</div></code></pre>
+<p>可以直接运行<code>wen</code>库中的<code>requirements.txt</code>文件， 即<code>pip install requirements.txt</code>进行安装。</p>
+<p>另外我们提供一个基于cambricon pytorch ，包括Chinese-LLaMA-Alpaca、FastChat代码及其依赖项的docker镜像
+适配过的代码库分别在：</p>
+<pre class="hljs"><code><div>/workspace/Chinese-LLaMA-Alpaca_mlu
+/workspace/FastChat_mlu
+</div></code></pre>
+<h1 id="3-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E7%AB%8B">3 数据库建立</h1>
+<p>首先我们将寒武纪的开发者文档根据小章节进行拆分， 比如</p>
+<pre class="hljs"><code><div>TensorBoard：TensorFlow 的可视化工具包
+
+TensorBoard 提供机器学习实验所需的可视化功能和工具：
+
+ * 跟踪和可视化损失及准确率等指标
+
+ * 可视化模型图（操作和层）
+
+ * 查看权重、偏差或其他张量随时间变化的直方图
+
+ * 将嵌入投射到较低的维度空间
+
+ * 显示图片、文字和音频数据
+
+ * 剖析 TensorFlow 程序
+
+ * 以及更多功能
+</div></code></pre>
+<p>另外也可以将文档API进行分开， 比如：</p>
+<pre class="hljs"><code><div>tf.nn.avg_pool
+
+Performs the avg pooling on the input.
+
+tf.nn.avg_pool(
+    input, ksize, strides, padding, data_format=None, name=None
+)
+
+Each entry in output is the mean of the corresponding size ksize window in value.
+
+Args
+
+- input: Tensor of rank N+2, of shape [batch_size] + input_spatial_shape + [num_channels] if data_format does not start with &quot;NC&quot; (default), or [batch_size, num_channels] + input_spatial_shape if data_format starts with &quot;NC&quot;. Pooling happens over the spatial dimensions only.
+- ksize: An int or list of ints that has length 1, N or N+2. The size of the window for each dimension of the input tensor.
+- strides：An int or list of ints that has length 1, N or N+2. The stride of the sliding window for each dimension of the input tensor.
+- padding: A string, either 'VALID' or 'SAME'. The padding algorithm. See here for more information.
+- data_format: A string. Specifies the channel dimension. For N=1 it can be either &quot;NWC&quot; (default) or &quot;NCW&quot;, for N=2 it can be either &quot;NHWC&quot; (default) or &quot;NCHW&quot; and for N=3 either &quot;NDHWC&quot; (default) or &quot;NCDHW&quot;.
+- name:	Optional name for the operation.
+
+Returns
+A Tensor of format specified by data_format. The average pooled output tensor.
+</div></code></pre>
+<p>通过执行 <code>python ./ingest.py</code> 中的函数对每个的小章节或者API介绍进行编码，并保存。整个领域知识入库​的过程如下图所示：</p>
+<p><img src="./images/database.png" alt="database"></p>
+<h1 id="4-%E6%96%87%E6%9C%AC%E5%88%86%E5%89%B2">4. 文本分割</h1>
+<p><code>text_split.py</code>文件中提供了根据文本长度和对应的token的长度的不同分割方式，用户可以根据不同的模型要求，选择对应的tokenizer和分割方式。</p>
+<ul>
+<li>
+<p><code>create_chunk_for_text</code>函数为根据文本的长度进行分割， 比如我们采用的llama模型要求sequence的长度为2048， 除去prompt其它的部分文字，设置对应的长度为2000。</p>
+</li>
+<li>
+<p><code>create_embeddings_for_text</code>函数为根据文本对应token的长度进行分割， 比如gpt3.5采用的模型要求token的长度为1000。</p>
+</li>
+</ul>
+<h1 id="5-%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83">5. 模型的训练</h1>
+<p>由上面的架构图可以看出，当搜索系统找不到对应的背景文本时，系统的答案由大模型给出， 所以整个系统的性能的下限由大模型的性能决定。为了提升整个问题系统在寒武纪开发者文档上的性能，我们在寒武纪开发文档进行了模型的训练，下面为整个训练的过程包括：</p>
+<ul>
+<li>
+<p>数据集的制作</p>
+</li>
+<li>
+<p>模型的训练</p>
+</li>
+</ul>
+<h2 id="%E6%95%B0%E6%8D%AE%E9%9B%86%E7%9A%84%E5%88%B6%E4%BD%9C">数据集的制作</h2>
+<h3 id="%E9%A2%86%E5%9F%9F%E7%9F%A5%E8%AF%86%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B">领域知识的基本处理流程</h3>
+<ol>
+<li>收集领域知识</li>
+<li>数据清洗、数据的分块</li>
+<li>问答数据的生成</li>
+</ol>
+<p>首先我们下载领域知识的文档，将文档中的水印、版权以及无用的小标题去掉，然后根据小的section对文档进行拆分生成一个文本列表，
+然后遍历该文本列表，生成对应的数据集。由于该过程有一些定制化修改，用户可以根据自己的需求调用对应的Python包进行处理。</p>
+<h3 id="%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E9%97%AE%E7%AD%94qa%E6%95%B0%E6%8D%AE%E9%9B%86">创建一个问答（Q&amp;A）数据集</h3>
+<p>我们主要使用chatgpt和规则算法的方式， 根据给定的文本生成对应的问答数据。具体的流程如下：</p>
+<ul>
+<li>加载数据，生成对应的文本信息</li>
+<li>根据对应的文本生成问答数据</li>
+</ul>
+<ol>
+<li>用户可以执行<code>python ./data_process.py</code>, 采用chatgpt根据背景文档，生成若干个问答数据， 然后根据问答数据进行筛选。比如对Tensorboard的介绍的问答为：</li>
+</ol>
+<pre class="hljs"><code><div>问题：TensorBoard是什么？
+回答：TensorBoard是TensorFlow的可视化工具包，提供机器学习实验所需的可视化功能和工具。
+
+问题：TensorBoard可以跟踪和可视化哪些指标？
+回答：TensorBoard可以跟踪和可视化损失、准确率等指标。
+
+问题：TensorBoard可以用来查看哪些内容的直方图？
+回答：TensorBoard可以用来查看权重、偏差或其他张量随时间变化的直方图。
+
+问题：TensorBoard有哪些功能？
+回答：TensorBoard可以可视化模型图、将嵌入投射到较低的维度空间、显示图片、文字和音频数据、剖析TensorFlow程序等，并提供更多功能。
+</div></code></pre>
+<ol start="2">
+<li>
+<p>根据API接口（结构比较固定），我们这里采用规则算法（根据模板生成），生成对应的QA数据，如：</p>
+<pre class="hljs"><code><div>{
+    问题: &quot;您能告诉我 Tensorflow的avg_pool 的源代码吗？&quot;, 
+
+    回答： &quot;Tensorflow的avg_pool 的函数调用如下：
+
+        tf.nn.avg_pool(input, ksize, strides, padding, data_format=None, name=None)&quot;
+}, 
+
+
+{
+    问题: &quot;介绍Tensorflow的avg_pool的参数。&quot;, 
+    回答： &quot;Tensorflow的avg_pool函数的参数如下：
+    
+        - input: Tensor of rank N+2, of shape [batch_size] + input_spatial_shape + [num_channels] if data_format does not start with &quot;NC&quot; (default), or         [batch_size, num_channels] + input_spatial_shape if data_format starts with &quot;NC&quot;. Pooling happens over the spatial dimensions only.
+        - ksize：An int or list of ints that has length 1, N or N+2. The size of the window for each dimension of the input tensor.
+        - strides: An int or list of ints that has length 1, N or N+2. The stride of the sliding window for each dimension of the input tensor.
+        - padding: A string, either 'VALID' or 'SAME'. The padding algorithm. See here for more information.
+        - data_format: A string. Specifies the channel dimension. For N=1 it can be either &quot;NWC&quot; (default) or &quot;NCW&quot;, for N=2 it can be either &quot;NHWC&quot; (default) or &quot;NCHW&quot; and for N=3 either &quot;NDHWC&quot; (default) or &quot;NCDHW&quot;.
+        - name: Optional name for the operation.&quot;
+}, 
+</div></code></pre>
+</li>
+</ol>
+<h2 id="%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83from-source">模型的训练(from source)</h2>
+<h2 id="1-%E4%BD%BF%E7%94%A8%E7%9A%84%E4%BB%A3%E7%A0%81">1. 使用的代码</h2>
+<pre><code>- url:  https://github.com/ymcui/Chinese-LLaMA-Alpaca.git
+- commit-id：134d22e6b2bde3cd6745ac146d4a55b6b8cb5ad5
+</code></pre>
+<h2 id="2-%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E4%BE%9D%E8%B5%96">2. 修改过的依赖：</h2>
+<pre><code>- transformers: 4.28.1 
+- accelerate: 0.19.0
+</code></pre>
+<p>使用cambricon pytorch 提供的torch_gpu2mlu.py 对上面2个依赖做过转换，具体的做法青请参数cambricon pytorch 用户手册</p>
+<h2 id="3-%E4%BA%8C%E6%AC%A1pretrain">3. 二次pretrain</h2>
+<h3 id="31-%E6%95%B0%E6%8D%AE">3.1 数据：</h3>
+<pre><code>寒武纪开发者文档的 markdown 版本
+</code></pre>
+<h3 id="32-%E8%AE%AD%E7%BB%83%E8%84%9A%E6%9C%ACscriptsrunptsh">3.2 训练脚本：scripts/run_pt.sh</h3>
+<p>dataset_dir 中的文件应当是txt文件（我们使用的markdown格式，txt后缀的文件）</p>
+<pre class="hljs"><code><div>lr=1e-5
+lora_rank=8
+lora_alpha=32
+lora_trainable="q_proj,v_proj,k_proj,o_proj,gate_proj,down_proj,up_proj"
+modules_to_save="embed_tokens,lm_head"
+lora_dropout=0.05
+
+pretrained_model=/data/zhaoying/chinese-alpaca-plus-13B
+chinese_tokenizer_path=/data/zhaoying/chinese-alpaca-plus-13B/tokenizer.model
+dataset_dir=/data/zhaoying/Chinese-LLaMA-Alpaca_mlu/official_doc_only_user_guide
+data_cache=temp_data_cache_dir
+per_device_train_batch_size=2
+per_device_eval_batch_size=2
+training_steps=5000
+gradient_accumulation_steps=2
+output_dir=output_pt_with_wiki
+RANDOM=0
+
+deepspeed_config_file=ds_zero2_no_offload.json
+
+deepspeed --include="localhost:0,1,2,3,4,5,6,7" --master_port 1236 run_clm_pt_with_peft.py \
+    --deepspeed ${deepspeed_config_file} \
+    --model_name_or_path ${pretrained_model} \
+    --tokenizer_name_or_path ${chinese_tokenizer_path} \
+    --dataset_dir ${dataset_dir} \
+    --data_cache_dir ${data_cache} \
+    --validation_split_percentage 0.001 \
+    --per_device_train_batch_size ${per_device_train_batch_size} \
+    --per_device_eval_batch_size ${per_device_eval_batch_size} \
+    --do_train \
+    --seed $RANDOM \
+    --fp16 \
+    --max_steps ${training_steps} \
+    --lr_scheduler_type cosine \
+    --learning_rate ${lr} \
+    --warmup_ratio 0.05 \
+    --weight_decay 0.01 \
+    --logging_strategy steps \
+    --logging_steps 10 \
+    --save_strategy steps \
+    --save_total_limit 3 \
+    --save_steps 2000 \
+    --gradient_accumulation_steps ${gradient_accumulation_steps} \
+    --preprocessing_num_workers 8 \
+    --block_size 512 \
+    --output_dir ${output_dir} \
+    --overwrite_output_dir \
+    --ddp_timeout 30000 \
+    --logging_first_step True \
+    --lora_rank ${lora_rank} \
+    --lora_alpha ${lora_alpha} \
+    --trainable ${lora_trainable} \
+    --modules_to_save ${modules_to_save} \
+    --lora_dropout ${lora_dropout} \
+    --torch_dtype float16 \
+    --gradient_checkpointing \
+    --ddp_find_unused_parameters False
+</div></code></pre>
+<h2 id="33-pretrain-%E5%90%8E%E5%A4%84%E7%90%86">3.3 pretrain 后处理：</h2>
+<h3 id="331-%E6%A0%BC%E5%BC%8F%E5%8C%96">3.3.1. 格式化：</h3>
+<pre class="hljs"><code><div>cd ${output_dir}
+cp ${pretrained_model}/adapter_config.json adapter_config.json
+mv pytorch_model.bin adapter_model.bin
+</div></code></pre>
+<h3 id="332-merge-checkpoint">3.3.2. merge checkpoint</h3>
+<pre class="hljs"><code><div>python scripts/merge_llama_with_chinese_lora.py --base_model ${pretrained_model} --lora_model ${output_dir} -output_type huggingface --output_dir ${pt_model_dir}
+</div></code></pre>
+<h2 id="4-supervised-fine-tuning">4. supervised fine tuning</h2>
+<h3 id="41-%E6%95%B0%E6%8D%AE">4.1 数据</h3>
+<p>为上面<code>创建一个问答（Q&amp;A）数据集</code>中生成的数据</p>
+<h3 id="42-finetune-%E8%84%9A%E6%9C%ACscriptsrunsftsh">4.2 finetune 脚本：scripts/run_sft.sh</h3>
+<ul>
+<li>dataset_dir 下面的是若干json文件，每个json文件是alpaca格式的训练数据，即包含“instruction”， “input”，“output”三元组的列表</li>
+<li>per_device_train_batch_size 和  per_device_eval_batch_size 和 gradient_accumulation_steps 建议根据显存大小调整</li>
+<li>validation_file 是可选的</li>
+<li>save_steps 表示每经过一定step 后save 一次checkpoint，但是这里的checkpoint 是 全量的，包括train state，13B的模型，硬盘用量大约40GB，如果不需要checkpoint，可以将 save_steps 设置的大于training_steps，这种情况下，之后在训练完毕后保存一个lora 权重，不会保存全量的checkpoint，按照下面lora相关参数，13B的模型保存的lora权重大小约2.0GB</li>
+</ul>
+<pre class="hljs"><code><div>lr=1e-4
+lora_rank=8
+lora_alpha=32
+lora_trainable="q_proj,v_proj,k_proj,o_proj,gate_proj,down_proj,up_proj"
+modules_to_save="embed_tokens,lm_head"
+lora_dropout=0.05
+
+pretrained_model=../chinese-alpaca-plus-13B-cambricon-pt-6.5-epoch/
+chinese_tokenizer_path=$pretrained_model/tokenizer.model
+dataset_dir=../clean_qa/
+per_device_train_batch_size=2
+per_device_eval_batch_size=2
+training_steps=256
+gradient_accumulation_steps=64
+output_dir=output_sft_lora_clean_qa_0706_epoch_20/
+peft_model=null
+validation_file=../qa_datasets_human_filtered/filtered_qa_alpaca_dataset_after_remove_similar.json
+RANDOM=0
+
+deepspeed_config_file=ds_zero2_no_offload.json
+
+deepspeed --include="localhost:0,1,2,3" --master_port 12345 run_clm_sft_with_peft.py \
+    --deepspeed ${deepspeed_config_file} \
+    --model_name_or_path ${pretrained_model} \
+    --tokenizer_name_or_path ${chinese_tokenizer_path} \
+    --dataset_dir ${dataset_dir} \
+    --validation_split_percentage 0.001 \
+    --per_device_train_batch_size ${per_device_train_batch_size} \
+    --per_device_eval_batch_size ${per_device_eval_batch_size} \
+    --do_train \
+    --seed $RANDOM \
+    --fp16 \
+    --max_steps ${training_steps} \
+    --lr_scheduler_type cosine \
+    --learning_rate ${lr} \
+    --warmup_ratio 0.03 \
+    --weight_decay 0 \
+    --logging_strategy steps \
+    --logging_steps 10 \
+    --save_strategy steps \
+    --save_total_limit 3 \
+    --evaluation_strategy steps \
+    --eval_steps 20 \
+    --save_steps 1000 \
+    --gradient_accumulation_steps ${gradient_accumulation_steps} \
+    --preprocessing_num_workers 8 \
+    --max_seq_length 512 \
+    --output_dir ${output_dir} \
+    --overwrite_output_dir \
+    --ddp_timeout 30000 \
+    --logging_first_step True \
+    --lora_rank ${lora_rank} \
+    --lora_alpha ${lora_alpha} \
+    --trainable ${lora_trainable} \
+    --modules_to_save ${modules_to_save} \
+    --lora_dropout ${lora_dropout} \
+    --torch_dtype float16 \
+    --gradient_checkpointing \
+    --validation_file ${validation_file} \
+    --ddp_find_unused_parameters False
+
+</div></code></pre>
+<h3 id="43-sft-%E5%90%8E%E5%A4%84%E7%90%86">4.3. sft 后处理：</h3>
+<h4 id="431-%E6%A0%BC%E5%BC%8F%E5%8C%96">4.3.1. 格式化：</h4>
+<pre class="hljs"><code><div>	cd ${output_dir}
+	cp ${pretrained_model}/adapter_config.json adapter_config.json
+	mv pytorch_model.bin adapter_model.bin
+</div></code></pre>
+<h4 id="432-merge-checkpoint">4.3.2. merge checkpoint</h4>
+<pre class="hljs"><code><div>python scripts/merge_llama_with_chinese_lora.py --base_model ${pt_model_dir} --lora_model ${output_dir} -output_type huggingface --output_dir ${sft_model_dir}
+</div></code></pre>
+<h2 id="%E4%BD%BF%E7%94%A8-fastchat-%E6%8E%A8%E7%90%86">使用 fastChat 推理：</h2>
+<h2 id="1-%E4%BB%A3%E7%A0%81">1. 代码</h2>
+<pre><code>URL：https://github.com/ymcui/Chinese-LLaMA-Alpaca.git
+commit id：134d22e6b2bde3cd6745ac146d4a55b6b8cb5ad5
+</code></pre>
+<h2 id="2-fastchat%E9%80%82%E9%85%8Dmlu">2. fastChat适配MLU</h2>
+<p>使用cambricon pytorch 提供的torch_gpu2mlu.py 对上面2个依赖做过转换，具体的做法青请参数cambricon pytorch 用户手册
+source /torch/venv3/pytorch/bin/activate
+export LD_LIBRARY_PATH=/torch/neuware_home/lib64/:LD_LIBRARY_PATH</p>
+<h2 id="3-%E5%90%AF%E5%8A%A8fastchat%E6%9C%8D%E5%8A%A1">3. 启动fastChat服务</h2>
+<pre class="hljs"><code><div><span class="hljs-meta">#</span><span class="bash"> 下面的命令来自 docs/openai_api.md</span>
+python3 -m fastchat.serve.controller &amp;
+python3 -m fastchat.serve.openai_api_server --host 0.0.0.0 --port 8001 &amp;
+python3 -m fastchat.serve.model_worker  --gpus 0,1 --num-gpus 2  --model-name ${model_name} --model-path ${model_path}
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-keyword">for</span> example:</span>
+<span class="hljs-meta">#</span><span class="bash">python3 -m fastchat.serve.model_worker  --gpus 0,1 --num-gpus 2  --model-name chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20  --model-path /projs/AE/zhaoying/projects/Chinese-LLaMA-Alpaca/chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20</span>
+</div></code></pre>
+<h1 id="6-webui%E7%9A%84%E5%B1%95%E7%A4%BA">6. webui的展示</h1>
+<p>我们这里提供了一个简单的图形界面，在启动<code>fastchat</code>服务后，用户只需要运行 <code>python app.py</code>，修改对应的处理器的IP以及大语言模型的路径名，然后打开对应的IP即可。</p>
+<p>如下图所示， 我们可以直接提问， 发送问题，chatbot会给出对应的答案。</p>
+<p>寒武纪API文档中一些API接口的介绍
+<img src="./images/gui.png" alt="chatbot1"></p>
+<p>寒武纪开发者手册中一些概念的介绍
+<img src="./images/ui1.png" alt="chatbot2"></p>
+<h1 id="7-%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AF%84%E6%B5%8B">7. 系统的评测</h1>
+<p>知识问答系统的性能变化较大，比如我们因为参数的设置观察到问答的结果充满幻觉或者错误回答，为次我们搭建了一个系统来</p>
+<ol>
+<li>用更系统的方式评测问答的结果</li>
+<li>通过评测来更新QA链中参数的设置, 比如分块大小，模型选择等等。</li>
+</ol>
+<p>使用着可以运行 <code>python evaluate.py</code>, 将根据文字内容进行比较，返回比较正确与错误，最后根据问题的数据，计算整个的准确率。最后会生成一个表格，将问题、背景文本、答案、标准答案、评分对比， 表格的格式如下：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th style="text-align:center">背景文本</th>
+<th style="text-align:right">答案</th>
+<th style="text-align:right">标准答案</th>
+<th style="text-align:right">评分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TensorBoard是什么？</td>
+<td style="text-align:center">TensorBoard：TensorFlow 的可视化工具包  TensorBoard 提供机器学习实验所 需的可视化功能和工具：* 跟踪和可视化损失及准确率等指标* 可视化模型图（操作和层）* 查看权重、偏差或其他张量随时间变化的直方图 * 将嵌入投射到较低的维度空间 * 显示图片、文字和音频数据 * 剖析 TensorFlow 程序 * 以及更多功能</td>
+<td style="text-align:right">TensorBoard是TensorFlow的可视化工具包，提供机器学习实验所需的可视化功能和工具。</td>
+<td style="text-align:right">TensorBoard是TensorFlow的可视化工具包，提供机器学习实验所需的可视化功能和工具。</td>
+<td style="text-align:right">正确</td>
+</tr>
+<tr>
+<td>您能告诉我 Tensorflow的avg_pool 的源代码吗？</td>
+<td style="text-align:center">tf.nn.avg_pool. Performs the avg pooling on the input. tf.nn.avg_pool(input, ksize, strides, padding, data_format=None, name=None). Each entry in output is the mean of the corresponding size ksize window in value. Args: input: Tensor of rank N+2, of shape [batch_size] + input_spatial_shape + [num_channels] if data_format does not start with &quot;NC&quot; (default), or [batch_size, num_channels] + input_spatial_shape if data_format starts with &quot;NC&quot;. Pooling happens over the spatial dimensions only. ksize: An int or list of ints that has length 1, N or N+2. The size of the window for each dimension of the input tensor. strides：An int or list of ints that has length 1, N or N+2. The stride of the sliding window for each dimension of the input tensor. padding: A string, either 'VALID' or 'SAME'. The padding algorithm. See here for more information. data_format: A string. Specifies the channel dimension. For N=1 it can be either &quot;NWC&quot; (default) or &quot;NCW&quot;, for N=2 it can be either &quot;NHWC&quot; (default) or &quot;NCHW&quot; and for N=3 either &quot;NDHWC&quot; (default) or &quot;NCDHW&quot;. name:	Optional name for the operation.Returns. A Tensor of format specified by data_format. The average pooled output tensor.</td>
+<td style="text-align:right">tf.nn.avg_pool(input, ksize, strides, padding, data_format=None, name=None)</td>
+<td style="text-align:right">tf.nn.avg_pool(input, ksize, strides, padding, data_format=None, name=None)</td>
+<td style="text-align:right">正确</td>
+</tr>
+<tr>
+<td>介绍Tensorflow的avg_pool的作用。</td>
+<td style="text-align:center">tf.nn.avg_pool. Performs the avg pooling on the input. tf.nnavg_pool(input, ksize, strides, padding, data_format=None, name=None). Each entry in output is the mean of the corresponding size ksize window in value. Args: input: Tensor of rank N+2, of shape [batch_size] + input_spatial_shape + [num_channels] if data_format does not start with &quot;NC&quot; (default), or [batch_size, num_channels] + input_spatial_shape if data_format starts with &quot;NC&quot;. Pooling happens over the spatial dimensions only. ksize: An int or list of ints that has length 1, N or N+2. The size of the window for each dimension of the input tensor. strides：An int or list of ints that has length 1, N or N+2. The stride of the sliding window for each dimension of the input tensor. padding: A string, either 'VALID' or 'SAME'. The padding algorithm. See here for more information. data_format: A string. Specifies the channel dimension. For N=1 it can be either &quot;NWC&quot; (default) or &quot;NCW&quot;, for N=2 it can be either &quot;NHWC&quot; (default) or &quot;NCHW&quot; and for N=3 either &quot;NDHWC&quot; (default) or &quot;NCDHW&quot;. name:	Optional name for the operation.Returns. A Tensor of format specified by data_format. The average pooled output tensor.</td>
+<td style="text-align:right">Performs the avg pooling on the input.</td>
+<td style="text-align:right">Performs the avg pooling on the input.</td>
+<td style="text-align:right">正确</td>
+</tr>
+</tbody>
+</table>
+<h1 id="8-%E6%80%BB%E7%BB%93">8. 总结</h1>
+<p>本系统针对特定领域知识问答系统的问题，进行了方案的优化。不难发现：传统的搜索模式、LLM 的 Fine-Tuning、Prompt Engineer 等方式均存在不同程度的缺陷。该方法将本地知识通过传统搜索框架进行处理，并作为答案的基础数据源。这保证了答案的精准和可靠。同时基于 Prompt Engineering 激发 LLM 的自然语言理解、生成和简单推理能力，对用户的问题预处理、对原始答案进行加工。从而提供了更加智能和友好的交互方式。</p>
+<p>经过分析比较后，决定探索 LLM + 搜索 的方式进行处理，并在寒武纪的开发者文档的具体应用场景进行验证。通过在数据集上面的评测，该系统比端到端的大模型的性能提升了20%。相比较与流行的<code>langchain</code>系统，本体系采用在特定领域的文档上进行训练，提高系统性能的下限，另外采用训练后模型的答案进行搜索，对对应背景文档的召回率更高。相比<code>langchain</code>， 用户也可以更好的扩展。</p>
+<h1 id="9-%E9%99%84%E5%BD%95%E5%B8%B8%E8%A7%81%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">9 附录：常见的问题及解决方案</h1>
+<h2 id="1-%E9%94%99%E8%AF%AF%E7%AD%94%E6%A1%88">1. 错误答案</h2>
+<p>如果答案是错误的，这仅仅意味着上下文没有正确传递或没有足够的数量。要解决这个问题：</p>
+<ul>
+<li>
+<p>增加返回的文档数量（取前 3 到 5 个） - 并且不要使用非常高的数字，否则信噪比会很低，并且答案将不正确。</p>
+</li>
+<li>
+<p>确保您输入的查询/问题包含足够的上下文来获取相关文档：这对于询问“美国赢得了多少枚奖牌？”是显而易见的。与询问“美国在 2020 年夏季奥运会上赢得了多少枚奖牌？”相比，获取相关内容的可能性较小。因此，查询会极大地影响您的检索。</p>
+</li>
+<li>
+<p>减小块大小。我假设所有文档都很大，您必须将它们分成更小的部分。同样，由于信噪比较低，您需要调整文档块的大小，通常在 500 左右，但需要进行调整。虽然它不会产生巨大的差异，但肯定会提高性能和答案质量。</p>
+</li>
+</ul>
+<h2 id="2%E7%AD%94%E6%A1%88%E4%B8%8D%E5%AE%8C%E6%95%B4">2.答案不完整</h2>
+<p>在使用开源模型时，这是一个巨大的问题。即使他们接受了指令调整，他们也常常无法正确完成句子。</p>
+<p>简单的解决方法是：使用他们接受过培训的提示。这意味着，使用提示：</p>
+<p>不会工作</p>
+<pre class="hljs"><code><div>根据下面的文章，回答问题。
+
+- 第1条
+- 第2条
+- 第3条
+
+问题：嘿嘿！怎么了？
+回答：
+</div></code></pre>
+<p>而且模型无法正确给出答案的可能性更高。因为模型是在这样的结构上进行训练的：</p>
+<pre class="hljs"><code><div>&lt;|提示器|&gt;
+ -  操作说明  - -
+&lt;|提示器|&gt;
+&lt;|文本结束|&gt;
+&lt;|助理|&gt;
+-- 完成 ---
+</div></code></pre>
+<p>现在，在这样的模型中，使用通用提示符不会有帮助，我们需要更改搜索系统中的提示符：</p>
+<p>可能会很好地工作</p>
+<pre class="hljs"><code><div>&lt;|提示器|&gt;
+根据以下文件，尝试回答问题。不要使用任何其他信息来回答...
+
+文件：
+- 文件1
+- 文件2
+- 文件3
+`
+问题：嘿嘿！怎么了？
+答案：&lt;|提示器|&gt;&lt;|endoftext|&gt;&lt;|助手|&gt;
+</div></code></pre>
+<p>注意：不同型号会有不同的提示样式。</p>
+<p>因此，</p>
+<ul>
+<li>
+<p>修复 1：更改提示。通用的不会有帮助。</p>
+</li>
+<li>
+<p>修复 2：使用更好/更大的模型。与 GPT一样，您对搜索系统的默认提示不应该有任何问题，但仍然更改提示将帮助您。</p>
+</li>
+<li>
+<p>修复 3：更改生成参数。尝试调整温度、重复惩罚等等。它们对答案有巨大的影响。</p>
+</li>
+</ul>
+
+</body>
+</html>
