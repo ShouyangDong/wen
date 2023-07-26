@@ -7,7 +7,6 @@ from tqdm import tqdm
 import json
 import openai
 from datetime import datetime
-import torch
 
 from elasticsearch import Elasticsearch
 import os
@@ -16,23 +15,25 @@ import numpy as np
 from numpy.linalg import norm
 import requests
 from scipy.spatial.distance import cosine
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # only do once
-# 连接到 Elasticsearch 服务器
+# connect Elasticsearch server
 es = Elasticsearch(
     ["https://10.100.158.12:9200"],
     verify_certs=False,
     http_auth=("elastic", "*qdSlBZ7AmkaHhyf0VLN"),
 )
 
-# 设置OpenAI API
+# set the OpenAI API
 openai.api_key = "YOUR_API_KEY"
 openai.api_base = "http://10.100.207.69:8001/v1"
 
 
-
-def get_embedding_from_api(word, model="chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20"):
+def get_embedding_from_api(
+    word, model="chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20"
+):
     url = "http://10.100.207.69:8001/v1/create_embeddings"
     headers = {"Content-Type": "application/json"}
     data = json.dumps({"model": model, "input": word})
@@ -49,19 +50,22 @@ def get_embedding_from_api(word, model="chinese-alpaca-plus-13B-clean-qa-cambric
 def cosine_similarity(vec1, vec2):
     return 1 - cosine(vec1, vec2)
 
+
 def query_question(USER_QUESTION):
     model = "chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20"
-    
+
     # search function
     def strings_ranked_by_relatedness(query, corpus_list, top_n=100):
         """Returns a list of strings and relatednesses, sorted from most related to least."""
         query_embedding = get_embedding_from_api(query)
         # Calculate cosine similarity
         cosine_similarities = []
-        
+
         for corpus in corpus_list:
             corpus_embedding = get_embedding_from_api(corpus, model)
-            cosine_similarities.append(cosine_similarity(query_embedding, corpus_embedding))
+            cosine_similarities.append(
+                cosine_similarity(query_embedding, corpus_embedding)
+            )
         # Sort articles by cosine similarity
         score = np.sort(cosine_similarities)
         index = np.argsort(cosine_similarities)
@@ -75,7 +79,6 @@ def query_question(USER_QUESTION):
                     body={"content": doc_content, "publish_date": datetime.now()},
                 )
 
-        # 搜索包含关键字 "elasticsearch" 的文档
         res = es.search(index="doc", body={"query": {"match": {"content": query}}})
         formatted_top_results = set()
         for hit in res["hits"]["hits"]:
@@ -125,8 +128,10 @@ def query_question(USER_QUESTION):
     if len(related_corpus_sentences) == 0:
         return final_response
 
-    # We use cosine-similarity and torch.topk to find the highest 5 scores
-    top_results = strings_ranked_by_relatedness(final_response, related_corpus_sentences, top_n=top_k)
+    # We use cosine-similarity and find the highest top_k scores
+    top_results = strings_ranked_by_relatedness(
+        final_response, related_corpus_sentences, top_n=top_k
+    )
 
     # If the highest score < 0.6, just print the hypothetical ideal answer
     if top_results[0][0] >= 0.6:
@@ -140,7 +145,7 @@ def query_question(USER_QUESTION):
             {USER_QUESTION}
             """
             completion = openai.ChatCompletion.create(
-                model=model, messages=[{"role": "user", "content": prompt}],
+                model=model, messages=[{"role": "user", "content": prompt}]
             )
             final_response = completion.choices[0].message.content.strip()
         except Exception as e:
