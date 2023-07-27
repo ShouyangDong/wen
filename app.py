@@ -3,18 +3,19 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 app.static_folder = "static"
 
-from tqdm import tqdm
 import json
-import openai
+import os
 from datetime import datetime
 
-from elasticsearch import Elasticsearch
-import os
-import urllib3
 import numpy as np
-from numpy.linalg import norm
+import openai
 import requests
+import urllib3
+from elasticsearch import Elasticsearch
+from numpy.linalg import norm
 from scipy.spatial.distance import cosine
+from tqdm import tqdm
+from util import get_embedding_from_api
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -29,22 +30,6 @@ es = Elasticsearch(
 # set the OpenAI API
 openai.api_key = "YOUR_API_KEY"
 openai.api_base = "http://10.100.207.69:8001/v1"
-
-
-def get_embedding_from_api(
-    word, model="chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20"
-):
-    url = "http://10.100.207.69:8001/v1/create_embeddings"
-    headers = {"Content-Type": "application/json"}
-    data = json.dumps({"model": model, "input": word})
-
-    response = requests.post(url, headers=headers, data=data)
-    if response.status_code == 200:
-        embedding = np.array(response.json()["data"][0]["embedding"])
-        return embedding
-    else:
-        print(f"Error: {response.status_code} - {response.text}")
-        return None
 
 
 def cosine_similarity(vec1, vec2):
