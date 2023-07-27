@@ -11,11 +11,16 @@ import numpy as np
 import openai
 import requests
 import urllib3
+import markdown
+import markdown.extensions.fenced_code
+import markdown.extensions.codehilite
+
 from elasticsearch import Elasticsearch
 from numpy.linalg import norm
 from scipy.spatial.distance import cosine
 from tqdm import tqdm
 from util import get_embedding_from_api
+from pygments.formatters import HtmlFormatter
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -146,7 +151,17 @@ def home():
 @app.route("/get")
 def get_bot_response():
     question = request.args.get("msg")
+
     chat_answer = query_question(question)
+    chat_answer = markdown.markdown(
+        chat_answer, extensions=["fenced_code", "codehilite"]
+    )
+    # Generate Css for syntax highlighting
+    formatter = HtmlFormatter(style="paraiso-dark",full=True,cssclass="codehilite")
+    css_string = formatter.get_style_defs()
+    md_css_string = "<style>" + css_string + "</style>"
+
+    md_answer = md_css_string + chat_answer   
     return chat_answer
 
 
