@@ -4,4 +4,9 @@
 
 如下图所示， 我们可以直接提问， 发送问题，chatbot会给出对应的答案。
 
-![chatbot](./../images/gui.png)
+
+## API文档中一些API接口的介绍
+![chatbot1](./../images/gui.png)
+
+## 概念的介绍
+![chatbot2](./../images/gui1.png)
