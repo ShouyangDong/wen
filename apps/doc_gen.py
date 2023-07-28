@@ -123,7 +123,7 @@ class GPT4Docstrings:
         if not filenames:
             return sys.exit(1)
 
-        self.common_base = utils.get_common_base(filenames)
+        self.common_base = util.get_common_base(filenames)
         return filenames
 
     def _generate_file_docstrings(self, filename: str):
@@ -136,7 +136,7 @@ class GPT4Docstrings:
         click.echo(click.style(f"Documenting file {filename} ... ", fg="green"))
 
         for node in source.find_all("def"):
-            if not utils.check_def_node_is_class_method(node):
+            if not util.check_def_node_is_class_method(node):
                 if not node.value[0].type == "string":
                     docstring_dict = self.docstring_generator.generate_function_docstring(
                         node.dumps()
@@ -154,14 +154,14 @@ class GPT4Docstrings:
                 for method_node in node.value:
                     if (
                         method_node.type == "def"
-                        and not utils.check_is_private_method(method_node)
+                        and not util.check_is_private_method(method_node)
                         and not method_node.value[0].type == "string"
                     ):
                         method_node.value.insert(0, docstring_dict[method_node.name])
 
                 self.documented_nodes.append([filename, node.name])
 
-        utils.write_updated_source_to_file(source, filename)
+        util.write_updated_source_to_file(source, filename)
 
     def _generate_docstrings(self, filenames: List[str]):
         """Generates docstrings for multiple files.
