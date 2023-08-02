@@ -24,7 +24,7 @@ history = [
 
 
 # Define function to add docstring to Python functions
-def addDocstring(filePath):
+def gen_api_doc(filePath):
     """
     Generates API documentation using OpenAI API
 
@@ -93,4 +93,4 @@ def addDocstring(filePath):
 # Run the function if this script is called directly
 if __name__ == "__main__":
     filePath = sys.argv[1]
-    addDocstring(filePath)
+    gen_api_doc(filePath)
