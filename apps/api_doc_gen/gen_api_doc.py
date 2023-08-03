@@ -40,9 +40,10 @@ def gen_api_doc(filePath):
     with open(filePath, "r", encoding="utf-8") as file:
         code = RedBaron(file.read())
 
-    output_doc = []
+    output_doc = ""
     # Loop through all functions in the Python file
     for node in code.find_all("def"):
+        print("[INFO]loop functions.")
         # To avoid OpenAI rate limit (only free trial accounts have rate limit, comment the code below if you have a paid account)
         # Free trial accounts have a hard cap of 1 request every 20 seconds
         if time.time() - currentTime < 20:
@@ -54,7 +55,7 @@ def gen_api_doc(filePath):
 
         # Send the function code to ChatGPT API for generating docstring (offcourse use GPT4 API if you hace access to it)
         response = openai.ChatCompletion.create(
-            model="vicuna-33b-v1.3/",
+            model="vicuna-33b-v1.3",
             temperature=0.2,
             messages=[
                 *history,
@@ -82,7 +83,7 @@ def gen_api_doc(filePath):
             }
         )
 
-        output_doc.append(docstring)
+        output_doc += docstring
 
     # Write the modified Python file back to disk
     with open(filePath +".txt", "w", encoding="utf-8") as file:

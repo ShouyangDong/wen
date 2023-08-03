@@ -55,7 +55,7 @@ def addDocstring(filePath):
 
             # Send the function code to ChatGPT API for generating docstring (offcourse use GPT4 API if you hace access to it)
             response = openai.ChatCompletion.create(
-                model="vicuna-33b-v1.3/",
+                model="vicuna-33b-v1.3",
                 temperature=0.2,
                 messages=[
                     *history,
