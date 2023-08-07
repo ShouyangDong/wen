@@ -54,3 +54,12 @@
             - name: Optional name for the operation."
     }, 
     ```
+
+3. 根据API的代码，生成对应的代码描述和代码的数据，如：
+    ```
+    {
+        问题: "一个使用MobileNetV2架构在ImageNet数据集上进行训练的预训练图像特征向量模型。它可以用于在新的分类任务上进行特征提取和微调。请写出对应描述的Python代码。"
+        
+        回答: "input_shape=(224,224,3)\n\n\n# Load an image and preprocess it\nimage = tf.keras.preprocessing.image.load_img('path/to/image.jpg', target_size=(224, 224))\nimage = tf.keras.preprocessing.image.img_to_array(image)\nimage = tf.expand_dims(image, 0)\n\n# Extract feature vector\nfeature_vector = model.predict(image)"
+    }
+    ```
