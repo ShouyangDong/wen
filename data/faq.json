@@ -1,0 +1,1289 @@
+[
+  {
+    "id": "identity_0",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "寒武纪驱动是否支持不同类型板卡混插？"
+      },
+      {
+        "from": "human",
+        "value": "在Cambricon MLU Driver层面支持不同MLU设备混插在同一个主机里，在硬件初始化正常情况下驱动能完成正常加载，正确看到全部设备节点。但是Cambricon MLU Driver不保证在业务中混合使用不同类型设备的安全性，即在同进程内使用CNToolkit控制不同类型的设备会有未定义的异常。因此在混插平台下使用MLU需要保证“混插不混用”原则，即硬件环境内支持多种设备，但是在同进程内需要保证CNToolkit只能枚举相同设备。不遵守原则会导致cnInit()调用时报错。屏蔽其他类型设备方法：在系统启动后，驱动加载前使用root账户echo 1 > /sys/bus/pci/devices/${pcie_bdf}/remove移除不使用设备，再加载驱动。如果驱动已经加载，通过设置环境变量，例如 “export MLU_VISIBLE_DEVICES=0,1” ，指定同类型设备使用。"
+      }
+    ]
+  },
+  {
+    "id": "identity_2",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "cnmon支持循环打印吗？"
+      },
+      {
+        "from": "human",
+        "value": "支持。cnmon -r可以循环打印信息，默认频率为500毫秒。"
+      }
+    ]
+  },
+  {
+    "id": "identity_3",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "cnmon info回显信息中“N/A”和“Unknown”代表什么意思？"
+      },
+      {
+        "from": "human",
+        "value": "“N/A”代表该功能信息在当前平台不支持。“Unknown”表示当前平台无相应信息。"
+      }
+    ]
+  },
+  {
+    "id": "identity_4",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "使用CNCC时找不到CNAS的原因是什么？"
+      },
+      {
+        "from": "human",
+        "value": "CNCC调用CNAS处理汇编阶段编译时需要获取用户shell进程中的 NEUWARE_HOME 环境变量。如果没有配置该变量，就会出现该错误。"
+      }
+    ]
+  },
+  {
+    "id": "identity_5",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "在x86_64系统上如何编译AArch64平台的Cambricon BANG C程序。"
+      },
+      {
+        "from": "human",
+        "value": "CNCC支持编译出AArch64平台的obj文件，然后由Host端的交叉工具链负责链接为目标AArch64平台上的动态库或可执行程序，可参考CNCC的 --target 编译选项。更多参考资料，参见 cncc --help 和开源社区Clang的帮助文档。"
+      }
+    ]
+  },
+  {
+    "id": "identity_6",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon CNNL是什么？"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon CNNL（寒武纪人工智能计算库）是一个基于寒武纪MLU并针对人工智能网络的应用场景提供了高度优化常用算子的高性能计算库。"
+      }
+    ]
+  },
+  {
+    "id": "identity_7",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon CNNL与Cambricon CNNL Extra是什么关系，版本之间有什么依赖？"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon CNNL Extra作为Cambricon CNNL的扩展库，提供了深度人工智能网络应用场景中的高度优化融合算子，同时也为用户开放了添加自定义算子的入口。Cambricon CNNL Extra依赖Cambricon CNNL。"
+      }
+    ]
+  },
+  {
+    "id": "identity_8",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon CNNL与CNML是什么关系？同时使用时是否会有冲突？"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon CNNL与CNML的实现原理不同。CNML是JIT模式，基于固定网络结构和规模将整个编译得到高度融合的离线模型，适用于网络结构固定的并且要求极致性能的场景。Cambricon CNNL是AOT模式，指令以单算子为粒度存在于编译好的动态库中，支持规模可变，适用于灵活度高的应用场景。理论上在满足兼容性的硬件平台、驱动版本以及CNToolkit版本上，Cambricon CNNL和CNML可以同时使用。"
+      }
+    ]
+  },
+  {
+    "id": "identity_9",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon CNNL是否可以生成离线模型？"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon CNNL是AOT模式，指令是提前生成并存放于动态库中，不支持也不需要生成离线模型。"
+      }
+    ]
+  },
+  {
+    "id": "identity_10",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon CNNL算子实现的算法和接口与哪些框架保持一致？"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon CNNL算子开发参照Pytorch和TensorFlow框架算子算法实现，在功能和接口上尽量同时满足两个框架的需求。"
+      }
+    ]
+  },
+  {
+    "id": "identity_11",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "当有新的算子需求而Cambricon CNNL中没有相应算子实现时，应如何处理？"
+      },
+      {
+        "from": "human",
+        "value": "建议先分析是否可以由多个Cambricon CNNL算子拼接实现，如还不能满足要求，可以考虑使用Cambricon CNNL Extra开发自定义算子，或联系寒武纪AE工程师提出需求。"
+      }
+    ]
+  },
+  {
+    "id": "identity_12",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "部分算子在half数据类型下精度较差，是否有提高Cambricon CNNL算子精度的方法？"
+      },
+      {
+        "from": "human",
+        "value": "部分算子支持设置更高位宽的计算数据类型以提高计算精度。例如卷积类算子可以将 cnnlConvolutionDescriptor_t 中的 compute_type 设置为float数据类型，激活类算子可以设置 cnnlComputationPreference_t 来选择高精度或高性能模式，cnnlReduce 支持用户通过设置reduce_desc->tensor_type的数据类型来选择高精度或高性能模式。具体参见 cnnl.h 或《Cambricon CNNL Developer Guide》中各算子接口描述。"
+      }
+    ]
+  },
+  {
+    "id": "identity_13",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "在运行过程中遇到执行超时的现象，应如何处理？"
+      },
+      {
+        "from": "human",
+        "value": "建议减小算子规模进行使用，或联系寒武纪AE工程师提出需求。对于Pointwise类算子，建议把输入张量拆分成多个小张量，然后把各个输出按照拆分的方式进行拼接。"
+      }
+    ]
+  },
+  {
+    "id": "identity_14",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "对于多plane图像格式，如YUV420SP_NV12和YUV420SP_NV21，两个plane的内存地址必须是连续的吗？"
+      },
+      {
+        "from": "human",
+        "value": "CNCV中普遍的多batch多plane图像数据是摆放在一个指针数组中的。以YUV420SP_NV12为例，图像内存摆放格式为：|img_0_y|img_0_uv|img_1_y|img_1_uv|...|img_n_y|img_n_uv| ，因此可以支持多plane图像各plane内存不连续场景；各plane图像内存连续的情况下，uv plane地址按照y plane地址加上offset做偏移，按照前面的摆放规范填充指针数组即可。"
+      }
+    ]
+  },
+  {
+    "id": "identity_15",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "设置了不同的cncvColorSpace枚举值，但算子输出结果是一致的，是否正常？"
+      },
+      {
+        "from": "human",
+        "value": "并非所有算子计算结果都与cncvColorSpace值关联。当前支持的算子中，ResizeConvert和YuvToRgbx两个算子支持BT.601和BT.709两种ColorSpace，RgbxToYuv支持BT.601一种ColorSpace，其余算子计算与ColorSpace无关，可以输入任意ColorSpace计算，且相同输入的计算输出一致。"
+      }
+    ]
+  },
+  {
+    "id": "identity_16",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNCV算子的workspace是否可以一次申请后一直复用？"
+      },
+      {
+        "from": "human",
+        "value": "CNCV中部分算子需要workspace内存。workspace内存大小可能与输入输出图像信息、ROI信息、batch大小相关。不建议一次申请后一直复用，建议动态判断算子需要的workspace内存大小（使用 cncvGetxxxWorkspaceSize() 接口）。当内存不够时，销毁重新申请，做动态适应。"
+      }
+    ]
+  },
+  {
+    "id": "identity_17",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon BANG C OPS是什么？"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon BANG C OPS 是一个基于寒武纪MLU并针对人工智能网络的应用场景提供了高度优化常用算子的高性能计算库。"
+      }
+    ]
+  },
+  {
+    "id": "identity_18",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon BANG C OPS与CNML是什么关系？同时使用时是否会有冲突？"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon BANG C OPS与CNML的实现原理不同。CNML是JIT模式，基于固定网络结构和规模将整个编译得到高度融合的离线模型，适用于网络结构固定的并且要求极致性能的场景。Cambricon BANG C OPS是AOT模式，指令以单算子为粒度存在于编译好的动态库中，支持规模可变，适用于灵活度高的应用场景。理论上在满足兼容性的硬件平台、驱动版本以及CNToolkit版本上，Cambricon BANG C OPS和CNML可以同时使用。"
+      }
+    ]
+  },
+  {
+    "id": "identity_19",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon BANG C OPS是否可以生成离线模型？"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon BANG C OPS是AOT模式，指令是提前生成并存放于动态库中，不支持也不需要生成离线模型。"
+      }
+    ]
+  },
+  {
+    "id": "identity_20",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "当有新的算子需求而Cambricon BANG C OPS中没有相应算子实现时，应如何处理？"
+      },
+      {
+        "from": "human",
+        "value": "建议先分析是否可以由多个Cambricon BANG C OPS算子拼接实现，如还不能满足要求，可以由开发者向社区贡献算子或者在github仓库提issue获取帮助。"
+      }
+    ]
+  },
+  {
+    "id": "identity_21",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "安装依赖或源码编译过程中出现 unrecognized command line option xxx 类似报错。"
+      },
+      {
+        "from": "human",
+        "value": "由于环境中g++版本较低导致无法识别指定的编译参数，建议将g++版本升级为大于等于5.4.0。"
+      }
+    ]
+  },
+  {
+    "id": "identity_22",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "执行 python setup.py install 安装Torchvision出现编译报错：\n```error: cannot convert 'std::nullptr_t' to 'Py_ssize_t {aka long int}' in initialization.```"
+      },
+      {
+        "from": "human",
+        "value": "安装Torchvision依赖FFmpeg，需要使用源码安装FFmpeg。或者使用pip安装 pip install torchvision==0.7.0 。"
+      }
+    ]
+  },
+  {
+    "id": "identity_23",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "为什么无法运行Torchvision的自定义算子？"
+      },
+      {
+        "from": "human",
+        "value": "如果希望使用Torchvision中的第三方算子，例如需要在MLU设备上运行NMS算子，此时需要安装与Cambricon PyTorch版本对应的Cambricon Torchvision。 若仅需要使用Torchvision的网络模型，可以使用 pip install torchvision==0.7.0 安装原生框架的Torchvision。"
+      }
+    ]
+  },
+  {
+    "id": "identity_24",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Ubuntu16.04系统在AArch64平台交叉编译过程中出现报错：fatal error: 'sys/cdefs.h' file not found。"
+      },
+      {
+        "from": "human",
+        "value": "执行命令 sudo apt-get install libc6-dev-i386 安装依赖项。"
+      }
+    ]
+  },
+  {
+    "id": "identity_25",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Ubuntu16.04系统在AArch64平台交叉编译过程中出现报错：fatal error: 'bits/libc-header-start.h' file not found。"
+      },
+      {
+        "from": "human",
+        "value": "执行命令 sudo apt-get install -y gcc-multilib 安装依赖项。"
+      }
+    ]
+  },
+  {
+    "id": "identity_26",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "使用Cambricon PyTorch训练时，出现类似warning：\n```torch/nn/modules/batchnorm.py:113: UserWarning: cast int64(double) to int(float) implicitly due to known MLU restrictions.```"
+      },
+      {
+        "from": "human",
+        "value": "算子暂不支持64位。默认情况下，long或int64类型数据会截断为int32，double类型数据会截断为float类型。用户可设置环境变量来禁止默认的截断：export CATCH_ALLOW_64BIT_TO_32BIT_CASTING=0。如果网络中出现64位数据时，计算会报错，此时，可使用Python函数将64位数据强制转换为32位。"
+      }
+    ]
+  },
+  {
+    "id": "identity_27",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "MLU290上运行Cambricon CNNL Extra中的部分算子时，会打印以下告警：\n```Error occurred during call 'cnModuleGetKernel' in CNdrv interface```。"
+      },
+      {
+        "from": "human",
+        "value": "该告警对功能没有影响，只影响打印LOG，后续版本Cambricon CNNL Extra计算库会修复该问题。"
+      }
+    ]
+  },
+  {
+    "id": "identity_28",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon PyTorch上运行convolution等算子（详见算子API文档）后，将输出Tensor拷贝到CPU端执行view操作，会报错：view size与input Tensor的size/stride不匹配。"
+      },
+      {
+        "from": "human",
+        "value": "由于MLU的硬件特点，部分算子进行计算时，会将Tensor的内存数据按照MemoryFormat为ChannelsLast或ChannelsLast3d进行摆数，加快其运算效率。因此，如果出现此类报错，可通过reshape算子替代view算子。"
+      }
+    ]
+  },
+  {
+    "id": "identity_29",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "由于MLU的硬件特点，部分算子进行计算时，会将Tensor的内存数据按照MemoryFormat为ChannelsLast或ChannelsLast3d进行摆数，加快其运算效率。因此，如果出现此类报错，可通过reshape算子替代view算子。\n```PyTorch is not linked with support for mlu devices. The running of the task requires MLU device initialization.```"
+      },
+      {
+        "from": "human",
+        "value": "程序编写没有调用 torch_mlu::torch_mlu_init() 进行设备初始化。在使用所有C++前端接口前，必须调用该函数初始化MLU设备。"
+      }
+    ]
+  },
+  {
+    "id": "identity_30",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "使用Torchvision源码安装C++前端过程中安装出现报错：\n```By not providing FindPython3.cmake in CMAKE_MODULE_PATH this project has asked CMake to find a package configuration file provided by Python3, but CMake did not find one.```"
+      },
+      {
+        "from": "human",
+        "value": "Torchvision源码安装C++前端过程中安装依赖cmake版本，推荐cmake版本为 >= 3.12.0。"
+      }
+    ]
+  },
+  {
+    "id": "identity_31",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "使用Torchvision源码安装C++前端过程中安装出现报错：```By not providing FindTorchVision.cmake in CMAKE_MODULE_PATH this project has asked CMake to find a package configuration file provided by TorchVision, but CMake did not find one.```"
+      },
+      {
+        "from": "human",
+        "value": "Torchvision源码编译安装依赖Torch依赖，需要指定 CMAKE_PREFIX_PATH 添加Torch依赖。"
+      }
+    ]
+  },
+  {
+    "id": "identity_32",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "为什么模型训练迭代过程中数据存在波动，而且程序中包含种子设置torch::manual_seed()？"
+      },
+      {
+        "from": "human",
+        "value": "MLU支持算子硬件加速，对个别算子输出会不唯一。常见算子：torch::conv反向输出梯度，dropout训练模型随机不受seed控制。"
+      }
+    ]
+  },
+  {
+    "id": "identity_33",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "使用 catch/script/release/independent_build.sh 脚本打patch出现告警：\n```Warning: You have applied patches to Pytorch.```。"
+      },
+      {
+        "from": "human",
+        "value": "该告警说明用户已经打过patch到PyTorch，无需重复操作。"
+      }
+    ]
+  },
+  {
+    "id": "identity_34",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "多卡模型计算时，产生如下报错信息：\n```RuntimeError: Distributed package doesn't have NCCL built in```。"
+      },
+      {
+        "from": "human",
+        "value": "MLU设备只支持CNCL通信后端，因此需要修改脚本，将 init_process_group 接口中的 backend 参数为 cncl 。"
+      }
+    ]
+  },
+  {
+    "id": "identity_35",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "出现 ImportError：No module named torch 错误。"
+      },
+      {
+        "from": "human",
+        "value": "需要先激活虚拟环境 source /torch/venv3/pytorch/bin/activate。"
+      }
+    ]
+  },
+  {
+    "id": "identity_36",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "出现 /bin/sh: 14: source: not found错误。"
+      },
+      {
+        "from": "human",
+        "value": "先在终端界面执行 bash 指令。"
+      }
+    ]
+  },
+  {
+    "id": "identity_37",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "尝试 torch_mlu 是否能够正常运行。"
+      },
+      {
+        "from": "human",
+        "value": "激活虚拟环境后，运行demo python /torch/src/catch/examples/training/single_card_demo.py ，如果正常结束表示运行成功。"
+      }
+    ]
+  },
+  {
+    "id": "identity_38",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "测试网络的throughout数据比《寒武纪PyTorch版本说明书》上的偏低。"
+      },
+      {
+        "from": "human",
+        "value": "单卡MLU规格的CPU和内存等资源受限，建议使用8卡MLU规格算力进行测试。"
+      }
+    ]
+  },
+  {
+    "id": "identity_39",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "测试网络在较大BatchSize的情况下运行失败/出现Kernel页错误。"
+      },
+      {
+        "from": "human",
+        "value": "测试脚本中配置的最大BatchSize一般配置为MLU所能支持的极限规模，在MLU设备被占用或服务器的内存资源不足时，可能出现运行失败或系统换页错误的情况。解决方法：\n关闭 pin_memory 选项和（或）降低运行的BatchSize。"
+      }
+    ]
+  },
+  {
+    "id": "identity_40",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "相对于PyTorch-Quantization v2.1.2 的版本特性，Cambricon PyTorch-Quantization存在什么限制？"
+      },
+      {
+        "from": "human",
+        "value": "目前有以下限制：\n不支持PyTorch-Quantization中三个自定义伪量化算子（fake_tensor_quant_、fake_tensor_quant、fake_tensor_quant_with_axis）。\n无法在MLU上直接导出使用Cambricon PyTorch-Quantization QAT训练的TorchScript模型和ONNX模型。"
+      }
+    ]
+  },
+  {
+    "id": "identity_41",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "相对于Pytorch Lightning v1.6.5 的版本特性，Cambricon Lightning存在什么限制？"
+      },
+      {
+        "from": "human",
+        "value": "目前Lightning有以下限制：\nstrategy只支持SingleDeviceStrategy、DDPStrategy、DDPSpawnStrategy、DeepspeedStrategy的Stage1和Stage2阶段。"
+      }
+    ]
+  },
+  {
+    "id": "identity_42",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "使用DeepspeedStrategy时，运行卡死，出现以下warning：\n```Allocating Die buff with size: 64.00 MiB for MLU: X, stuck for 120 secs```。"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon Lightning和Cambricon DeepSpeed会开启两组group，但CNCL为了控制内存占用，默认只申请支持1个clique的内存资源，需要设置环境变量。```export CNCL_MEM_POOL_MULTI_CLIQUE_ENABLE=1```"
+      }
+    ]
+  },
+  {
+    "id": "identity_43",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "使用DeepspeedStrategy的Stage3时出现以下error：```expected the next 1 parameters in the parameter fetch queue to be xxx```。"
+      },
+      {
+        "from": "human",
+        "value": "此为DeepSpeed官方0.6.0版本的bug。当前暂不支持Stage3，需要Cambricon DeepSpeed支持更高版本的DeepSpeed。"
+      }
+    ]
+  },
+  {
+    "id": "identity_44",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "我设置了 MLU_VISIBLE_DEVICES=0,1,2,3，为什么程序没有运行多卡？"
+      },
+      {
+        "from": "human",
+        "value": "MLU_VISIBLE_DEVICES 变量设置跟运行多卡没有必然联系。该变量用于控制进程上下文内MLU设备的可见性。 要运行多卡，需使用TensorFlow的分布式运行策略。"
+      }
+    ]
+  },
+  {
+    "id": "identity_45",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": " 在MLU270硬件平台上以逐层模式运行浮点模型需要设置 MLU_QUANT_PARAM、MLU_RUNNING_MODE 这些环境变量吗？"
+      },
+      {
+        "from": "human",
+        "value": "运行普通浮点模型时，默认是运行在线量化。如果要进行离线量化，就需要设置这些环境变量。如果运行的是 tensorflow/cambricon_examples/tools/fppb_to_intpb/ 目录下使用量化工具生成的量化模型，则不需要进行设置，默认会进行离线量化。"
+      }
+    ]
+  },
+  {
+    "id": "identity_46",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "运行逐层模式需要设置session_options中的 core_num、core_version 字段吗？"
+      },
+      {
+        "from": "human",
+        "value": "不需要。逐层模式下没有此类概念。"
+      }
+    ]
+  },
+  {
+    "id": "identity_47",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "通过环境变量，设置 CNCL_RING_NUM = 6，通信任务一定会被分配到6个物理环上并行执行吗？"
+      },
+      {
+        "from": "human",
+        "value": "不一定。CNCL 初始化建环需要结合具体的物理拓扑情况，如果实际能够建成的环数大于等于6，通信任务运行时会被分配到6个物理环上并行执行。如果实际能够建成的环数为2，即小于6，通信任务只能被分配到2个环上并行执行。"
+      }
+    ]
+  },
+  {
+    "id": "identity_48",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "两个 MLU 之间可以构建的 MLU-Link 通信连接数量是否存在上限？"
+      },
+      {
+        "from": "human",
+        "value": "存在上限。两个 MLU 之间的1条 MLU-Link 物理链路上最多能建7个逻辑链接，当同一 MLU-Link 物理链路被过多的通信域使用时，可能会在日志中看到如下所示的提示信息：\n```[CNLINC][warning] Cannot create more QTs (TX part) on port 2 due to hardware limitation! Please try to release unused QTs.`"
+      }
+    ]
+  },
+  {
+    "id": "identity_49",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "同一个通信任务中，同步接口和异步接口是否可以混合使用？"
+      },
+      {
+        "from": "human",
+        "value": "不可以。使用 CNCL 时的一次任务中，要求每个 Comm 调用相同的通信原语，且调用方式需均为同步语义或者均为异步语义。例如：在一个通信任务中有4个 Comm，其中3个 Comm 调用异步语义的 cnclBroadcast 接口，另外1个 Comm 调用同步语义的 cnclBroadcast 接口，程序运行时会被卡死。"
+      }
+    ]
+  },
+  {
+    "id": "identity_50",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNCL 通信原语接口中的 buffer 和 queue 两个参数是否存在某种映射关系？"
+      },
+      {
+        "from": "human",
+        "value": "存在。创建 buffer 和 queue 前，均需要调用 cnrtSetDevice() 接口，来明确本次资源申请操作位于哪个物理 MLU 设备上。任一通信原语接口中用到的 buffer 与 queue，需创建在同一个 MLU 设备上。"
+      }
+    ]
+  },
+  {
+    "id": "identity_51",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNCL 是否支持多用戶或者多进程同时使用同一个物理 MLU？"
+      },
+      {
+        "from": "human",
+        "value": "可以。但是目前由于硬件限制，CNCL 在默认设置情况下，每个物理 MLU 最多支持同时运行 2 个 CNCL 进程。如果想要同时支持更多的用户或进程，需要手动减小 CNCL_MDR_POOL_SIZE (默认 32MB) 环境变量的参数大小。"
+      }
+    ]
+  },
+  {
+    "id": "identity_52",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNCL 是否支持多个 docker 容器之间的 MLU 设备的数据通信？"
+      },
+      {
+        "from": "human",
+        "value": "支持。如果想在多个 docker 容器之间使用 P2P 进行 MLU 设备之间的通信，需要满足如下条件：\n多个 docker 容器在同一台主机上。CNCL 会根据 docker 容器中的 host name 以及 /proc/sys/kernel/random/boot_id 路径下的信息进行判断。\n多个 docker 容器之间配置了可见的共享内存。CNCL 会根据 docker 容器中的 /dev/shm 路径下的信息进行判断。\n涉及通信的 MLU 设备在多个 docker 容器内均可见。"
+      }
+    ]
+  },
+  {
+    "id": "identity_53",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNTOPO 支持使用 mpirun 在多进程下运行吗？"
+      },
+      {
+        "from": "human",
+        "value": "由于 ssh 本身在 mpirun 起的进程数过多时会有 ssh_exchange_identification: Connection closed by remote host 的报错，因此不建议在多进程的情况下运行 CNTOPO。"
+      }
+    ]
+  },
+  {
+    "id": "identity_54",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNTOPO 支持同时输入多个表示同一机器的 hostname 或 IP 地址吗？"
+      },
+      {
+        "from": "human",
+        "value": "不支持，若同时输入多个表示同一机器的 hostname 或 IP 地址，会出现一个环中同一个机器上的卡用了多次的情况，因此不能同时输入多个表示同一机器的 hostname 或 IP 地址。"
+      }
+    ]
+  },
+  {
+    "id": "identity_55",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "安装Cambricon Horovod时 Import 失败，如何操作？"
+      },
+      {
+        "from": "human",
+        "value": "执行以下步骤：\n确保 Cambricon TensorFlow 安装正确。如果安装时遇到以下报错信息，说明 Cambricon TensorFlow 没有安装。\n```ImportError: No module named tensorflow```确保CNToolkit安装正确，路径设置到 PATH 中。如果遇到以下报错信息，说明CNToolkit未安装或者路径未设置。\n```ImportError: libcnrt.so: cannot open shared object file: No such file or directory```。"
+      }
+    ]
+  },
+  {
+    "id": "identity_56",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "为什么import horovod 失败？"
+      },
+      {
+        "from": "human",
+        "value": "编译完成 Horovod 后，建议使用 Python 运行 import horovod 来检查 Horovod 是否正确安装完毕。执行以下步骤：\n```python -c import horovod.tensorflow as hvd```若安装正确，将不会有任何打印或仅有 CNRT 版本的打印信息，说明已经能够 import 并使用；若安装失败，可能会显示如下打印信息：```ImportError: Extension horovod.torch has not been built: xxx/horovod/tensorflow/mpi_lib/_mpi_lib.cpython-37m-x86_64-linux-gnu.so not found```这说明 Horovod 实际上没有在相应框架上成功安装，其原因可能为：没有找到 TensorFlow 框架。请您在安装时的打印信息中搜索 Found Tensorflow 字样，来确保框架已被正确寻找到。若未找到，则需确认框架是否已正确安装并且是否可以在 Python 命令行中被 import。没有 CMake。若安装时的打印信息中有关于 CMake 相关的错误信息，请您尝试 pip install cmake==3.18.4 后再进行安装。若问题不属于上述两类，建议您仔细查看安装过程中的打印信息，如可在其中搜索 error ，从而定位到编译错误原因并采取相应措施解决问题。"
+      }
+    ]
+  },
+  {
+    "id": "identity_57",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "安装时找不到 MPI，怎么办？"
+      },
+      {
+        "from": "human",
+        "value": "执行以下步骤：\n确保 MPI 在 PATH 中。使用 which mpirun 查看 mpirun 是否是安装 mpi 的路径。```which mpirun```。也可以使用 mpirun --version 查看 MPI 版本是否为3.1.2或4.0.0以上。```mpirun --version```。自定义 MPI 路径。```export PATH=$PATH:/path/to/mpi/bin```确保 MPI 库在 $LD_LIBRARY_PATH 或者 ld.so.conf 中。如果已安装好了 MPI，可以将 MPI 库添加至 $LD_LIBRARY_PATH 。```export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/mpi/lib```"
+      }
+    ]
+  },
+  {
+    "id": "identity_58",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "安装时返回 CMakeList 不匹配错误，怎么处理？"
+      },
+      {
+        "from": "human",
+        "value": "要解决此问题，将 horovod_plugin/deps/horovod/ 目录下的 build 和 dist 删除。"
+      }
+    ]
+  },
+  {
+    "id": "identity_59",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "运行时找不到 Gloo，如何处理？"
+      },
+      {
+        "from": "human",
+        "value": "如果在运行Cambricon Horovod时，遇到以下报错：\n```RuntimeError: Failed to determine if Gloo support has been built. Run again with --verbose for more details.```确保运行前设置了环境变量路径。假设您的寒武纪软件栈安装路径为 ${neuware_home}，运行以下指令设置运行路径。```export NEUWARE_HOME=${neuware_home}\nexport PATH=$NEUWARE_HOME/bin:$PATH\nexport LD_LIBRARY_PATH=${MPI_HOME}/bin:${NEUWARE_HOME}/lib64:$LD_LIBRARY_PATH```"
+      }
+    ]
+  },
+  {
+    "id": "identity_60",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "运行多机任务时，返回 multiprocessing semaphore 相关错误，如何处理？"
+      },
+      {
+        "from": "human",
+        "value": "若您使用 horovodrun 命令运行多机任务时出现以下报错：\n```multiprocessing/semaphore_tracker.py:144: UserWarning: semaphore_tracker: There appear to be 4 leaked semaphores to clean up at shutdown```可通过在运行脚本中添加环境变量解决：```export PYTHONWARNINGS='ignore:semaphore_tracker:UserWarning'```"
+      }
+    ]
+  },
+  {
+    "id": "identity_61",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "出现 Missing Ranks 信息提示，怎么办？"
+      },
+      {
+        "from": "human",
+        "value": "执行以下步骤解决:\n继续等待，某些情况下，该打印持续一段时间后，网络会继续恢复训练。\n检查您的训练脚本是否编写正确并正确使用了寒武纪软件栈提供的接口，并重新运行训练。\n确保没有其他训练进程与您的训练同时进行，并重新运行训练。\n若您期望该打印在持续一段时间后自动停止训练，以免影响其他训练任务的资源获取，请设置 export HOROVOD_STALL_SHUTDOWN_TIME_SECONDS = 600，单位为秒，这里以 600 秒为例。"
+      }
+    ]
+  },
+  {
+    "id": "identity_62",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "通过cnpapiSubscribe注册上去的callback，能够准确观测到被跟踪函数的执行时间吗？"
+      },
+      {
+        "from": "human",
+        "value": "除了用户通过cnpapiSubscribe注册上去的callback外，其实CNPAPI内部还有一个callback在工作，调用顺序是：用户callback in，内部callback in，内部callback out，用户callback out。在大部分情况下，cnpapi的内部callback执行时间较短。"
+      }
+    ]
+  },
+  {
+    "id": "identity_63",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNPAPI PMU API开销如何？"
+      },
+      {
+        "from": "human",
+        "value": "每次刷新数据的开销为毫秒级。"
+      }
+    ]
+  },
+  {
+    "id": "identity_64",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNPAPI Callback API支持哪些函数？"
+      },
+      {
+        "from": "human",
+        "value": "请参考CNPAPI交付件cnxx_id.h，如cnnl_id.h。"
+      }
+    ]
+  },
+  {
+    "id": "identity_65",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "使能CNPAPI_ACTIVITY_TYPE_PC_SAMPLING和使能PMU API是否可以同时进行？"
+      },
+      {
+        "from": "human",
+        "value": "否，会返回错误码CNPAPI_ERROR_NOT_SUPPORTED。CNPAPI不支持同时使用CNPAPI_ACTIVITY_TYPE_PC_SAMPLING和PMU API，因此在使用其中一个功能之后需要调用 cnpapiRelease 接口卸载CNPAPI，再调用 cnpapiInit 接口重新初始化CNPAPI，才能再使用另外一个功能。"
+      }
+    ]
+  },
+  {
+    "id": "identity_66",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNPAPI支持系统功能fork()吗？"
+      },
+      {
+        "from": "human",
+        "value": "支持，但需要满足以下场景：\n调用 cnpapiInit 前或调用 cnpapiRelease 后，允许调用fork()。子进程若满足先fork()再exec的调用流程，允许调用fork()。"
+      }
+    ]
+  },
+  {
+    "id": "identity_67",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "返回值CNPAPI_ERROR_DEPENDENT_LIB_NOT_FOUND指哪些依赖库未找到？"
+      },
+      {
+        "from": "human",
+        "value": "CNPAPI需要运行环境中存在libcndrv.so和libcndev.so。"
+      }
+    ]
+  },
+  {
+    "id": "identity_68",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNPAPI Callback API跟踪CNDrv API、CNRT API等API约有多少开销？"
+      },
+      {
+        "from": "human",
+        "value": "在Intel(R) Core(TM) i7-8700K CPU @ 3.70GHz测试，跟踪单个函数的开销约为60纳秒。"
+      }
+    ]
+  },
+  {
+    "id": "identity_69",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNPAPI Activity API会对CNDrv API、CNRT API的函数调用大约造成多少额外的开销？"
+      },
+      {
+        "from": "human",
+        "value": "CNPAPI Activity API可能会对部分Driver-API、Runtime-API的函数调用造成额外的开销，在AMD EPYC 7302P 16-Core Processor测试，大约会额外消耗几百至几千纳秒。"
+      }
+    ]
+  },
+  {
+    "id": "identity_70",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNPAPI反复使能CNPAPI_ACTIVITY_TYPE_NAME，是否会多次生成工作线程对应的cnpapiActivityName的数据？"
+      },
+      {
+        "from": "human",
+        "value": "每次enable会生成一次工作线程的cnpapiActivityName数据。"
+      }
+    ]
+  },
+  {
+    "id": "identity_71",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "哪些问题会导致CNPAPI PMU API读数不准？"
+      },
+      {
+        "from": "human",
+        "value": "用户在使用CNPAPI PMU API调优时其他用户的程序正在运行。用户在使用CNPAPI PMU API调优时开启了inline ECC功能。"
+      }
+    ]
+  },
+  {
+    "id": "identity_72",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "为什么有时候timechart的json文件打不开？"
+      },
+      {
+        "from": "human",
+        "value": "chrome://tracing 对内存需求较多，实测下来所需内存是文件大小的10倍左右。建议使用内存更大的机器或者调整配置文件，减少追踪内容。或者使用timechart时添加 -t 或 --duration 参数，分割文件。"
+      }
+    ]
+  },
+  {
+    "id": "identity_73",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "为什么CNPerf输出内容有乱码？"
+      },
+      {
+        "from": "human",
+        "value": "可能是环境不支持颜色格式化显示，可以尝试运行命令时添加 --color false 参数避免乱码。"
+      }
+    ]
+  },
+  {
+    "id": "identity_74",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "为什么CNPerf的依赖库不支持用户链接使用？"
+      },
+      {
+        "from": "human",
+        "value": "libdltrace.so 可能会改变用户的程序行为，需要通过 cnperf-cli 引导才能正确初始化。"
+      }
+    ]
+  },
+  {
+    "id": "identity_75",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "为什么使用CNPerf时提示分配共享内存失败并退出（Failed to allocate share memory）？"
+      },
+      {
+        "from": "human",
+        "value": "CNPerf在运行时通过共享内存记录数据，此报错说明未能成功创建共享内存。一般是由于共享内存不够造成的。 由于docker默认共享内存较小，在docker内运行时，建议用户在创建容器时通过 --shm-size 设置共享内存大小。建议数值为物理内存的一半以上。 另外，硬盘写入性能太差也会导致共享内存不够用，建议用户使用CNPerf时使用高性能存储设备。"
+      }
+    ]
+  },
+  {
+    "id": "identity_76",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": " 图像解码算子为mixed模式时出现“wait buf size[xxx] is unexpected, total size[xxx]”类似报错。"
+      },
+      {
+        "from": "human",
+        "value": "该问题原因为MLU解码buffer较小，导致有些图像解码失败，此时DALI会自动转为CPU解码，不影响运行结果。"
+      }
+    ]
+  },
+  {
+    "id": "identity_77",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "图像解码算子为mixed模式时出现“SyncJpegDecode: Unsupported JPEG stream data, resolution isn't supported, ret 0”。"
+      },
+      {
+        "from": "human",
+        "value": "该问题原因为MLU解码不支持部分图像的压缩格式，此时DALI会自动转为CPU解码，不影响运行结果。"
+      }
+    ]
+  },
+  {
+    "id": "identity_78",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "如何使用发布的CNToolkit包，测试视频解码器的性能？"
+      },
+      {
+        "from": "human",
+        "value": "1. 用于测试性能的视频需要自行准备规格范围内的视频，或从 jellyfish 或者 Big buck Bunny 等网站下载H.264和HEVC规格的视频。\n2. 编译CNCodec对应sample，video_dec_perf 支持多卡环境下和多线程情况下的端到端性能测试。测试结果受主机环境，板卡是否同时运行其他测试影响，以实测为准。\n3. CNCodec对外宣称的视频解码性能是在服务器主机配置CPU Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz 、512GB内存及4卡环境下，多次测试得出的平均结果。"
+      }
+    ]
+  },
+  {
+    "id": "identity_79",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "如何使用发布的CNToolkit包，测试视频编码器的性能？"
+      },
+      {
+        "from": "human",
+        "value": "1.编码性能影响因素很多，不同质量设定下，性能差异很大，CNCodec支持测试特定配置下的性能，用户可以自行修改不同参数组合进行测试。\n2.编译CNCodec对应sample， video_enc_perf 支持多卡环境下指定特定加速卡测试视频端到端性能及多线程情况下的性能。测试结果受主机环境，板卡是否同时运行其他测试影响，以实测为准。\n3.CNCodec对外宣称的视频编码性能是在服务器主机配置CPU Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz 、512GB内存及4卡环境下，多次测试得出的平均结果。"
+      }
+    ]
+  },
+  {
+    "id": "identity_80",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "有没有交叉编译CNStream的指导？"
+      },
+      {
+        "from": "human",
+        "value": "可下载edge编译压缩包 http://video.cambricon.com/models/edge.tar.gz，解压后按照README文档提供的步骤进行编译。"
+      }
+    ]
+  },
+  {
+    "id": "identity_81",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNStream怎么输入任意命名的图片？"
+      },
+      {
+        "from": "human",
+        "value": "目前CNStream支持Jpeg图片解码，可以通过file_list中添加字段进行通配符匹配，这种使用方式对图片源输入来说并不灵活。CNStream同时还支持输入任意名字的图片，通过fopen或者cv::imread事先将图片读入内存，然后再把该内存数据喂入Pipeline中进行后续处理。具体细节可以参考 samples/cns_launcher/cns_launcher.cpp 文件中的函数 FeedFrameAsync 和 FeedJpegAsync 内容。输入任意名字图片时，file list中存放图片目录，内容如下：\n```/path/of/images/\n...```/path/of/images/ 目录下保存待输入的图片。"
+      }
+    ]
+  },
+  {
+    "id": "identity_82",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNStream的parallelism 参数该怎么配置？"
+      },
+      {
+        "from": "human",
+        "value": "parallelism是模块内并行度，表明有多少个线程在同时运行 Module::Process 函数。 总体上该值越大，并行度越高，流水线处理能力越强，占用资源也越多。\nparallelism值应不大于数据流路数，否则会有线程空挂，造成资源浪费。同时增大该值时需要时刻关注系统资源是否够用。\n对于数据源模块，无需设置parallelism或将parallelism设置为0即可, 因为数据源模块的并行度是由输入数据路数决定的。\n对于推理模块，其内部使用InferServer进行异步推理，Process函数主要实现将数据发送给InferServer的逻辑，建议parallelism设置为1。\n对于编码模块，当使用拼图模式时（view_cols 或 view_rows 参数不为1时），parallelism参数必须设置为1。\n其余插件可以根据具体性能进行调整，比如某个插件性能较低，那么可以增大其parallelism值提高处理速率。如果当前性能已经远远超出pipeline上其他插件，那么可以减小该值以减少资源占用。\n"
+      }
+    ]
+  },
+  {
+    "id": "identity_83",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNStream使用module_contrib目录下的模块出现类未定义错误该怎么解决？"
+      },
+      {
+        "from": "human",
+        "value": "该问题是由于程序没有正确链接libcnstream_contrib.so库导致的，module_contrib目录下的代码包含在libcnstream_contrib.so库中。 CNStream初始化各模块使用的反射技术在程序运行时候才会依据类名字符串实例化一个类，这样的话不管编译时是否显式指定链接libcnstream_contrib.so，实际都不会链接该库。 我们可以通过 ldd  程序名称 命令查看是否真正完成链接。为了保证找到类定义，可以给链接选项加上--no-as-needed参数，CMake为例：\n```set(CMAKE_EXE_LINKER_FLAGS -Wl,--no-as-needed)```"
+      }
+    ]
+  },
+  {
+    "id": "identity_84",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNStream怎么解决编码推流画面卡顿？"
+      },
+      {
+        "from": "human",
+        "value": "CNStream采用Glog日志系统，所以日志默认行为和使用方式与Glog完全一致。例如可以通过环境变量 GLOG_minloglevel 调整日志输出等级，范围[0-3]，数 字越小输出的log内容越多。 如果希望打印更多的日志信息，在 GLOG_minloglevel=0 的前提下，设置环境变量 GLOG_v 调整自定义日志等级，范围[1-5]，数字越大输出的log内容越多。"
+      }
+    ]
+  },
+  {
+    "id": "identity_85",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNStream怎么调整Log打印等级？"
+      },
+      {
+        "from": "human",
+        "value": "CNStream采用Glog日志系统，所以日志默认行为和使用方式与Glog完全一致。例如可以通过环境变量 GLOG_minloglevel 调整日志输出等级，范围[0-3]，数 字越小输出的log内容越多。 如果希望打印更多的日志信息，在 GLOG_minloglevel=0 的前提下，设置环境变量 GLOG_v 调整自定义日志等级，范围[1-5]，数字越大输出的log内容越多。"
+      }
+    ]
+  },
+  {
+    "id": "identity_86",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "有没有交叉编译EasyDK的指导？"
+      },
+      {
+        "from": "human",
+        "value": "可下载edge编译压缩包 http://video.cambricon.com/models/edge.tar.gz，解压后按照README文档提供的步骤进行编译。"
+      }
+    ]
+  },
+  {
+    "id": "identity_87",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "EasyDK如何将Log打印到终端以及如何带颜色显示？"
+      },
+      {
+        "from": "human",
+        "value": "可以通过环境变量 GLOG_alsologtostderr 或者命令行参数 alsologtostderr 将日志打印到终端。 可以通过环境变量 GLOG_colorlogtostderr 或者命令行参数 colorlogtostderr 使不同等级的日志显示为不同的颜色。"
+      }
+    ]
+  },
+  {
+    "id": "identity_88",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "EasyDK怎么调整Log打印等级？"
+      },
+      {
+        "from": "human",
+        "value": "可以通过环境变量 GLOG_minloglevel 或者命令行参数 minloglevel 调整日志输出等级，范围[0-3]，数字越小输出的log内容越多。\n0 代表打印 LOG(INFO)\n1 代表打印 LOG(WARNING)\n2 代表打印 LOG(ERROR)\n3 代表打印 LOG(FATAL)\n另外，如果希望打印更多日志信息，在 minloglevel=0 的前提下，设置环境变量 GLOG_v 或者命令行参数 v 调整自定义日志等级，范围[1-5]，数字越大输出的log内容越多。"
+      }
+    ]
+  },
+  {
+    "id": "identity_89",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNVS日志文件的用途是什么？"
+      },
+      {
+        "from": "human",
+        "value": "当CNVS的某些插件执行失败，并且出现了fatal级别等用户无法处理的错误时，CNVS会将这类错误记入日志。在进行问题定位时，可将日志文件提供给寒武纪工程师，以便于辅助分析问题产生原因。"
+      }
+    ]
+  },
+  {
+    "id": "identity_90",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "为什么CNLight提供的TensorBoard在部分版本的谷歌浏览器上打不开？"
+      },
+      {
+        "from": "human",
+        "value": "目前已知在部分旧版本谷歌浏览器（如Chrome 56）上无法使用TensorBoard。由于TensorBoard官网没有声明Chrome版本要求，且测试最低支持版本难度较大，故建议用户使用推荐的Chrome版本，比如，Chrome 83、Chrome 92或Chrome 95。"
+      }
+    ]
+  },
+  {
+    "id": "identity_91",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNLight提供的TensorBoard可能会使用哪些端口号？"
+      },
+      {
+        "from": "human",
+        "value": "默认端口号是6006，用户也可以使用 -P 或者 --port 参数指定端口号。用户如果希望在docker内使用TensorBoard，则需要在docker配置时进行端口映射。"
+      }
+    ]
+  },
+  {
+    "id": "identity_92",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "默认情况下，CNLight会跟踪哪些函数？"
+      },
+      {
+        "from": "human",
+        "value": "默认情况下，CNLight只跟踪和异步任务有关的CNDrv函数以及和算子launch相关的Cambricon CNNL函数。用户如果希望跟踪其他函数，可以打开 CNLIGHT_TRACE_ALL 环境变量。"
+      }
+    ]
+  },
+  {
+    "id": "identity_93",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon CNRTC相比CNCC/CNAS有什么不同，优势是什么？"
+      },
+      {
+        "from": "human",
+        "value": "CNCC是Cambricon BANG C语言的编译器，CNAS是MLISA语言的汇编器，他们都是AOT编译，而Cambricon CNRTC支持Cambricon BANG C语言和MLISA语言的运行时编译，是JIT编译。 Cambricon CNRTC比CNCC/CNAS的编译速度更快。"
+      }
+    ]
+  },
+  {
+    "id": "identity_94",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "Cambricon CNRTC支持哪些编译选项？"
+      },
+      {
+        "from": "human",
+        "value": "Cambricon CNRTC是为用户在其应用程序中编译Cambricon BANG C或MLISA代码而设计，现已支持除 -o 外的全部CNCC编译选项和除 -i , --input , -o , --output 外的全部CNAS编译选项。-i 和 -o 不支持的原因是Cambricon CNRTC有自己的编译输入和输出获取接口 cnrtcCreateCode , cnrtcCreateCodeV2 , cnrtcGetCompilationOutput 和 cnrtcGetCompilationOutputSize ，无需用户使用 -i 和 -o 选项来指定输入输出文件名。 关于编译选项请参见 cnrtcCompileCode 接口说明。"
+      }
+    ]
+  },
+  {
+    "id": "identity_95",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "如何让Cambricon CNRTC编译得到MLU可执行的二进制？CNRT能否执行？"
+      },
+      {
+        "from": "human",
+        "value": "用户需要在 cnrtcCompileCode 函数中添加 --bang-fatbin-only (针对Cambricon BANG C语言)或 --fatbin (针对MLISA语言)编译选项进行编译，然后使用 cnrtcGetFatBinary 和 cnrtcGetFatBinarySize 接口获得编译结果 cnFatBinary 。当前仅有CNDRV可以执行 cnFatBinary 二进制，CNRT不支持。"
+      }
+    ]
+  },
+  {
+    "id": "identity_96",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "若想使用 cnrtcGetFatBinary 或 cnrtcGetFatBinarySize 接口，必须在 cnrtcCompileCode 函数中添加 --bang-fatbin-only 或 --fatbin 编译选项吗？"
+      },
+      {
+        "from": "human",
+        "value": "是的。因为从Cambricon CNRTC v0.4.0版本起，已支持除 -o 外的全部CNCC编译选项，从Cambricon CNRTC v0.5.0版本起，已支持除 -i , --input , -o , --output 外的全部CNAS编译选项，用户可得到多种编译输出，而 cnrtcGetFatBinary 和 cnrtcGetFatBinarySize 接口只能输出 cnFatBinary ，因此需要用户在 cnrtcCompileCode 函数中添加 --bang-fatbin-only (针对Cambricon BANG C语言)或 --fatbin (针对MLISA语言)编译选项来指明获得 cnFatBinary 。如需获得其他编译输出，则不能使用 cnrtcGetFatBinary 和 cnrtcGetFatBinarySize ，需要使用 cnrtcGetCompilationOutput 和 cnrtcGetCompilationOutputSize 。"
+      }
+    ]
+  },
+  {
+    "id": "identity_97",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "CNGDB 与 GDB 的区别？"
+      },
+      {
+        "from": "human",
+        "value": "CNGDB 是寒武纪 Cambricon BANG C 语言的调试工具，可以用于调试 Cambricon BANG C 语言写的 MLU 程序。CNGDB 在 GDB 的基础上进行开发，使用方法和命令全面兼容 GDB，在一次运行中同时支持 HOST 端和 MLU 端代码的调试，其中 HOST 端代码的调试直接由原生 GDB 支持。同时 CNGDB 对 MLU 端代码提供了一些专用的调试功能和命令。"
+      }
+    ]
+  },
+  {
+    "id": "identity_98",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "如何处理 “ERROR: No hardware resource to use. Please free!” 的错误提示信息？"
+      },
+      {
+        "from": "human",
+        "value": "MLU 程序的运行需要占用板卡的运算资源，在 CNGDB 中被调试程序所占用的资源只有在结束调试时才会被释放。而板卡的运算资源是有限的，当该机器上的资源都被占用后，会导致新的被调试程序无法启动执行，CNGDB 就会报出上面的信息。此时需要先释放资源才能使用 CNGDB。"
+      }
+    ]
+  },
+  {
+    "id": "identity_99",
+    "conversations": [
+      {
+        "from": "gpt",
+        "value": "cndev接口调用为什么不成功？"
+      },
+      {
+        "from": "human",
+        "value": "调用CNDev库接口之前请先调用 cndevInit 函数，函数执行成功才可以正常调用其它接口。如果cndevInit函数执行失败，请检查当前环境是否正确安装了驱动。"
+      }
+    ]
+  }
+]
