@@ -42,7 +42,7 @@ def cosine_similarity(vec1, vec2):
 
 
 def query_question(USER_QUESTION):
-    model = "chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20"
+    model = "chinese-alpaca-plus-13B-clean-qa-epoch-20"
 
     # search function
     def strings_ranked_by_relatedness(query, corpus_list, top_n=100):
