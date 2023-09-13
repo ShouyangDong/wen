@@ -72,7 +72,7 @@ if __name__ == "__main__":
     parser.add_argument("--dev-lang", help="Development language used for this request")
     parser.add_argument(
         "--openai-engine",
-        default="chinese-alpaca-plus-13B-clean-qa-cambricon-epoch-20",
+        default="chinese-alpaca-plus-13B-clean-qa-epoch-20",
         help="GPT-3.5 model to use. Options: text-davinci-003, text-davinci-002, text-babbage-001, text-curie-001, text-ada-001",
     )
     parser.add_argument(

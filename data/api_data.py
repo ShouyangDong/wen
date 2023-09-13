@@ -1,6 +1,6 @@
 import re
 import markdown
-with open("./cntoolkit_3.5.2_cambricon_bang_c_4.5.1.md", "r") as f:
+with open("./cntoolkit_3.5.2_bang_c_4.5.1.md", "r") as f:
     markdown_string = f.read()
 
 html_string = markdown.markdown(markdown_string)

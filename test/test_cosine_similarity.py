@@ -23,7 +23,7 @@ parser.add_argument("--message", type=str, default="Hello! Who are you?")
 args = parser.parse_args()
 
 document_model, document_tokenizer = load_model(
-    "/data1/AE/llm/models/cambricon-chatbot/",
+    "/chatbot/",
     args.device,
     args.num_gpus,
     args.max_gpu_memory,
