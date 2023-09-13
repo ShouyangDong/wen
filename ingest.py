@@ -22,6 +22,6 @@ def save_database(embedding_cache_path, file_name):
 
 
 if __name__ == "__main__":
-    embedding_cache_path = "./Cambricon-documentation.pkl"
+    embedding_cache_path = "./documentation.pkl"
     file_name = "new_docs_segments.txt"
     save_database(embedding_cache_path, file_name)
